@@ -1,3 +1,5 @@
+using System;
+
 namespace db {
     class DatabaseCredentialProvider {
         public string hostname {

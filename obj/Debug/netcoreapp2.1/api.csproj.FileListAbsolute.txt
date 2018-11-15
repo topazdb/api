@@ -1,0 +1,14 @@
+/home/rishabn/Desktop/api/obj/Debug/netcoreapp2.1/api.csprojAssemblyReference.cache
+/home/rishabn/Desktop/api/obj/Debug/netcoreapp2.1/api.csproj.CoreCompileInputs.cache
+/home/rishabn/Desktop/api/obj/Debug/netcoreapp2.1/api.RazorAssemblyInfo.cache
+/home/rishabn/Desktop/api/obj/Debug/netcoreapp2.1/api.RazorAssemblyInfo.cs
+/home/rishabn/Desktop/api/obj/Debug/netcoreapp2.1/api.AssemblyInfoInputs.cache
+/home/rishabn/Desktop/api/obj/Debug/netcoreapp2.1/api.AssemblyInfo.cs
+/home/rishabn/Desktop/api/bin/Debug/netcoreapp2.1/api.deps.json
+/home/rishabn/Desktop/api/bin/Debug/netcoreapp2.1/api.runtimeconfig.json
+/home/rishabn/Desktop/api/bin/Debug/netcoreapp2.1/api.runtimeconfig.dev.json
+/home/rishabn/Desktop/api/bin/Debug/netcoreapp2.1/api.dll
+/home/rishabn/Desktop/api/bin/Debug/netcoreapp2.1/api.pdb
+/home/rishabn/Desktop/api/obj/Debug/netcoreapp2.1/api.RazorTargetAssemblyInfo.cache
+/home/rishabn/Desktop/api/obj/Debug/netcoreapp2.1/api.dll
+/home/rishabn/Desktop/api/obj/Debug/netcoreapp2.1/api.pdb

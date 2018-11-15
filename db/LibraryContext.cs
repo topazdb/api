@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace db {
     public class LibraryContext : DbContext {
