@@ -2,25 +2,25 @@ using System;
 
 namespace db {
     class DatabaseCredentialProvider {
-        public string hostname {
+        static public string hostname {
             get {
                 return Environment.GetEnvironmentVariable("TOPAZ_HOST");
             }
         }
 
-        public string user {
+        static public string user {
             get {
                 return Environment.GetEnvironmentVariable("TOPAZ_USER");
             }
         }
 
-        public string password {
+        static public string password {
             get {
                 return Environment.GetEnvironmentVariable("TOPAZ_PASSWORD");
             }
         }
 
-        public string database {
+        static public string database {
             get {
                 return Environment.GetEnvironmentVariable("TOPAZ_DATABASE");
             }
