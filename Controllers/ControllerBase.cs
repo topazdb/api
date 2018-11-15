@@ -1,7 +1,5 @@
-namespace api.Controllers
-{
-    public class ControllerBase
-    {
+namespace api.Controller {
+    public class ControllerBase {
         
     }
 }
