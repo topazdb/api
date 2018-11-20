@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using api.db;
 
 namespace api.Controllers {
     [Route("api/[controller]")]
@@ -10,8 +11,10 @@ namespace api.Controllers {
     public class ValuesController : ControllerBase {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get() {
-            return new string[] { "value1", "value2" };
+        public ActionResult<IEnumerable<Authors>> Get() {
+            using(var db = new TopazdbContext()) {
+                return db.Authors.ToList();
+            }
         }
 
         // GET api/values/5

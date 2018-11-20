@@ -11678,6 +11678,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
       "Microsoft.AspNetCore.App >= 2.1.6",
+      "Microsoft.EntityFrameworkCore.Design >= 2.1.4",
       "Microsoft.NETCore.App >= 2.1.0",
       "MySql.Data >= 8.0.13",
       "MySql.Data.EntityFrameworkCore >= 8.0.13"
@@ -11725,6 +11726,10 @@
           "Microsoft.AspNetCore.App": {
             "target": "Package",
             "version": "[2.1.6, )"
+          },
+          "Microsoft.EntityFrameworkCore.Design": {
+            "target": "Package",
+            "version": "[2.1.4, )"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",

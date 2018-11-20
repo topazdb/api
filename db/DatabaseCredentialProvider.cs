@@ -1,6 +1,6 @@
 using System;
 
-namespace db {
+namespace api.db {
     class DatabaseCredentialProvider {
         static public string hostname {
             get {
