@@ -9,13 +9,13 @@ namespace api.db {
 
         public TopazdbContext(DbContextOptions<TopazdbContext> options) : base(options) {}
 
-        public virtual DbSet<Authors> Authors { get; set; }
-        public virtual DbSet<Instruments> Instruments { get; set; }
-        public virtual DbSet<InstrumentTypes> InstrumentTypes { get; set; }
-        public virtual DbSet<Lands> Lands { get; set; }
-        public virtual DbSet<Scans> Scans { get; set; }
-        public virtual DbSet<Sets> Sets { get; set; }
-        public virtual DbSet<Settings> Settings { get; set; }
+        public virtual DbSet<Author> Authors { get; set; }
+        public virtual DbSet<Instrument> Instruments { get; set; }
+        public virtual DbSet<InstrumentType> InstrumentTypes { get; set; }
+        public virtual DbSet<Land> Lands { get; set; }
+        public virtual DbSet<Scan> Scans { get; set; }
+        public virtual DbSet<Set> Sets { get; set; }
+        public virtual DbSet<Setting> Settings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             if (!optionsBuilder.IsConfigured) {
@@ -25,218 +25,218 @@ namespace api.db {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
-            modelBuilder.Entity<Authors>(entity => {
+            modelBuilder.Entity<Author>(entity => {
 
                 entity.ToTable("authors", "topazdb");
 
-                entity.Property(e => e.Id)
+                entity.Property(e => e.id)
                     .HasColumnName("id")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.Contact)
+                entity.Property(e => e.contact)
                     .HasColumnName("contact")
                     .IsUnicode(false)
                     .HasDefaultValueSql("NULL");
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.name)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(200)
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Instruments>(entity => {
+            modelBuilder.Entity<Instrument>(entity => {
 
                 entity.ToTable("instruments", "topazdb");
 
-                entity.HasIndex(e => new { e.InstrumentTypeId, e.SerialNo })
+                entity.HasIndex(e => new { e.instrumentTypeId, e.serialNo })
                     .HasName("instruments_typeId_serialNo_un")
                     .IsUnique();
 
-                entity.Property(e => e.Id)
+                entity.Property(e => e.id)
                     .HasColumnName("id")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.CalibrationDate)
+                entity.Property(e => e.calibrationDate)
                     .HasColumnName("calibrationDate")
                     .HasDefaultValueSql("'0000-00-00 00:00:00'");
 
-                entity.Property(e => e.InstrumentTypeId)
+                entity.Property(e => e.instrumentTypeId)
                     .HasColumnName("instrumentTypeId")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.SerialNo)
+                entity.Property(e => e.serialNo)
                     .HasColumnName("serialNo")
                     .HasMaxLength(300)
                     .IsUnicode(false)
                     .HasDefaultValueSql("NULL");
 
-                entity.HasOne(d => d.InstrumentType)
-                    .WithMany(p => p.Instruments)
-                    .HasForeignKey(d => d.InstrumentTypeId)
+                entity.HasOne(d => d.instrumentType)
+                    .WithMany(p => p.instruments)
+                    .HasForeignKey(d => d.instrumentTypeId)
                     .HasConstraintName("instruments_typeId_fk");
             });
 
-            modelBuilder.Entity<InstrumentTypes>(entity => {
+            modelBuilder.Entity<InstrumentType>(entity => {
 
                 entity.ToTable("instrumentTypes", "topazdb");
 
-                entity.Property(e => e.Id)
+                entity.Property(e => e.id)
                     .HasColumnName("id")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.Manufacturer)
+                entity.Property(e => e.manufacturer)
                     .IsRequired()
                     .HasColumnName("manufacturer")
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Model)
+                entity.Property(e => e.model)
                     .IsRequired()
                     .HasColumnName("model")
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Version)
+                entity.Property(e => e.version)
                     .IsRequired()
                     .HasColumnName("version")
                     .HasMaxLength(300)
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Lands>(entity => {
+            modelBuilder.Entity<Land>(entity => {
 
                 entity.ToTable("lands", "topazdb");
 
-                entity.HasIndex(e => e.ScanId)
+                entity.HasIndex(e => e.scanId)
                     .HasName("lands_scanId_fk");
 
-                entity.Property(e => e.Id)
+                entity.Property(e => e.id)
                     .HasColumnName("id")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.Path)
+                entity.Property(e => e.path)
                     .HasColumnName("path")
                     .IsUnicode(false)
                     .HasDefaultValueSql("NULL");
 
-                entity.Property(e => e.ScanId)
+                entity.Property(e => e.scanId)
                     .HasColumnName("scanId")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.HasOne(d => d.Scan)
-                    .WithMany(p => p.Lands)
-                    .HasForeignKey(d => d.ScanId)
+                entity.HasOne(d => d.scan)
+                    .WithMany(p => p.lands)
+                    .HasForeignKey(d => d.scanId)
                     .HasConstraintName("lands_scanId_fk");
             });
 
-            modelBuilder.Entity<Scans>(entity => {
+            modelBuilder.Entity<Scan>(entity => {
 
                 entity.ToTable("scans", "topazdb");
 
-                entity.HasIndex(e => e.AuthorId)
+                entity.HasIndex(e => e.authorId)
                     .HasName("scans_authorId_fk");
 
-                entity.HasIndex(e => e.InstrumentId)
+                entity.HasIndex(e => e.instrumentId)
                     .HasName("scans_instrumentId_fk");
 
-                entity.HasIndex(e => e.SetId)
+                entity.HasIndex(e => e.setId)
                     .HasName("scans_setId_fk");
 
-                entity.Property(e => e.Id)
+                entity.Property(e => e.id)
                     .HasColumnName("id")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.AuthorId)
+                entity.Property(e => e.authorId)
                     .HasColumnName("authorId")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.BarrelNo)
+                entity.Property(e => e.barrelNo)
                     .HasColumnName("barrelNo")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.BulletNo)
+                entity.Property(e => e.bulletNo)
                     .HasColumnName("bulletNo")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.CreationDate)
+                entity.Property(e => e.creationDate)
                     .HasColumnName("creationDate")
                     .HasDefaultValueSql("current_timestamp()");
 
-                entity.Property(e => e.InstrumentId)
+                entity.Property(e => e.instrumentId)
                     .HasColumnName("instrumentId")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.Magnification)
+                entity.Property(e => e.magnification)
                     .HasColumnName("magnification")
                     .HasColumnType("int(11) unsigned")
                     .HasDefaultValueSql("NULL");
 
-                entity.Property(e => e.Resolution)
+                entity.Property(e => e.resolution)
                     .HasColumnName("resolution")
                     .HasColumnType("int(11)")
                     .HasDefaultValueSql("NULL");
 
-                entity.Property(e => e.SetId)
+                entity.Property(e => e.setId)
                     .HasColumnName("setId")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.Threshold)
+                entity.Property(e => e.threshold)
                     .HasColumnName("threshold")
                     .HasColumnType("int(11)")
                     .HasDefaultValueSql("NULL");
 
-                entity.HasOne(d => d.Author)
-                    .WithMany(p => p.Scans)
-                    .HasForeignKey(d => d.AuthorId)
+                entity.HasOne(d => d.author)
+                    .WithMany(p => p.scans)
+                    .HasForeignKey(d => d.authorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("scans_authorId_fk");
 
-                entity.HasOne(d => d.Instrument)
-                    .WithMany(p => p.Scans)
-                    .HasForeignKey(d => d.InstrumentId)
+                entity.HasOne(d => d.instrument)
+                    .WithMany(p => p.scans)
+                    .HasForeignKey(d => d.instrumentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("scans_instrumentId_fk");
 
-                entity.HasOne(d => d.Set)
-                    .WithMany(p => p.Scans)
-                    .HasForeignKey(d => d.SetId)
+                entity.HasOne(d => d.set)
+                    .WithMany(p => p.scans)
+                    .HasForeignKey(d => d.setId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("scans_setId_fk");
             });
 
-            modelBuilder.Entity<Sets>(entity => {
+            modelBuilder.Entity<Set>(entity => {
 
                 entity.ToTable("sets", "topazdb");
 
-                entity.Property(e => e.Id)
+                entity.Property(e => e.id)
                     .HasColumnName("id")
                     .HasColumnType("bigint(20) unsigned");
 
-                entity.Property(e => e.CreationDate)
+                entity.Property(e => e.creationDate)
                     .HasColumnName("creationDate")
                     .HasDefaultValueSql("current_timestamp()");
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.name)
                     .IsRequired()
                     .HasColumnName("name")
                     .HasMaxLength(300)
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Settings>(entity => {
+            modelBuilder.Entity<Setting>(entity => {
 
-                entity.HasKey(e => e.Name);
+                entity.HasKey(e => e.name);
 
                 entity.ToTable("settings", "topazdb");
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.name)
                     .HasColumnName("name")
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Value)
+                entity.Property(e => e.value)
                     .HasColumnName("value")
                     .IsUnicode(false)
                     .HasDefaultValueSql("NULL");

@@ -11,7 +11,7 @@ namespace api.Controllers {
     public class ValuesController : ControllerBase {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<Authors>> Get() {
+        public ActionResult<IEnumerable<Author>> Get() {
             using(var db = new TopazdbContext()) {
                 return db.Authors.ToList();
             }
