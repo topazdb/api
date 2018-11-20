@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace api.db {
-
-    [Serializable()]
     public partial class Authors {
         public Authors() {
             Scans = new HashSet<Scans>();
