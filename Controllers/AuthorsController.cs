@@ -32,11 +32,23 @@ namespace api.Controllers {
         }
 
         [HttpPost]
-        public void Post([FromBody] string value) {
+        public void Post([FromBody] int id, string name, string contact) {
+            if(name == null){
+                throw new Exception("Name cannot be a null value");
+            }
+            using(var db = new TopazdbContext()){
+                db.Authors.Add(new Author(){ id = id, name = name, contact = contact }); 
+                db.SaveChanges(); 
+            }
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value) {
+        public void Put(int id, [FromBody] string name, string contact) {
+            if(name == null){
+                throw new Exception("Name cannot be a null value");
+            }
+           Delete(id); 
+           Post(id, name, contact); 
         }
 
         [HttpDelete("{id}")]
