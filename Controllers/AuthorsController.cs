@@ -8,7 +8,7 @@ using System.Web.Http;
 using api.db;
 
 namespace api.Controllers {
-    [Route("api/[controller]")]
+    [Route("authors")]
     [ApiController]
     public class AuthorsController : ControllerBase {
         [HttpGet]
@@ -26,33 +26,35 @@ namespace api.Controllers {
                 if(authorQuery.Count() == 0) {
                     throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
-
+                
                 return authorQuery.First();
             }
         }
 
         [HttpPost]
-        public void Post([FromBody] int id, string name, string contact) {
+        public String Post(string name, string contact) {
             if(name == null){
                 throw new Exception("Name cannot be a null value");
             }
             using(var db = new TopazdbContext()){
-                db.Authors.Add(new Author(){ id = id, name = name, contact = contact }); 
+                db.Authors.Add(new Author(){ name = name, contact = contact }); 
                 db.SaveChanges(); 
             }
+            return "Value Added Successfully"; 
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string name, string contact) {
+        public string Put(int id, string name, string contact) {
             if(name == null){
                 throw new Exception("Name cannot be a null value");
             }
-           Delete(id); 
-           Post(id, name, contact); 
+            Delete(id); 
+            Post(name, contact); 
+            return "Value updated Successfully"; 
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id) {
+        public String Delete(int id) {
             using(var db = new TopazdbContext()) {
                 var authorQuery = db.Authors.Where(a => a.id == id);
 
@@ -62,6 +64,7 @@ namespace api.Controllers {
 
                 db.Authors.Remove(new Author() { id = id });
                 db.SaveChanges();
+                return "Deleted Successfully"; 
             }
         }
     }
