@@ -6,6 +6,7 @@ namespace api.db
     public partial class Scan {
         public Scan() {
             lands = new HashSet<Land>();
+            creationDate = DateTime.Now;
         }
 
         public long id { get; set; }

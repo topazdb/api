@@ -32,18 +32,18 @@ namespace api.Controllers{
         }
 
         [HttpPost]
-        public String Post(string name, DateTimeOffset creationDate) {
+        public String Post(string name) {
             using(var db = new TopazdbContext()){
-                db.Sets.Add(new Set(){ name = name, creationDate = creationDate }); 
+                db.Sets.Add(new Set() { name = name }); 
                 db.SaveChanges(); 
             }
             return "Value Added Successfully"; 
         }
 
         [HttpPut("{id}")]
-        public string Put(int id, string name, DateTimeOffset creationDate) {
+        public string Put(int id, string name) {
             Delete(id); 
-            Post(name, creationDate); 
+            Post(name); 
             return "Value updated Successfully"; 
         }
 
