@@ -30,25 +30,25 @@ namespace api.Controllers{
         }
 
         [HttpPost]
-        public String Post(InstrumentType type) {
-            if(!ModelState.isValid) {
+        public ActionResult<InstrumentType> Post(InstrumentType type) {
+            if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            
+
             Database.InstrumentTypes.Add(type); 
             Database.SaveChanges(); 
-            return "Value Added Successfully"; 
+            return type; 
         }
 
         [HttpPut("{id}")]
-        public string Put(InstrumentType type) {
-            if(!ModelState.isValid) {
+        public ActionResult<InstrumentType> Put(InstrumentType type) {
+            if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             Delete(type.id); 
             Post(type); 
-            return "Value updated Successfully"; 
+            return type;
         }
 
         [HttpDelete("{id}")]

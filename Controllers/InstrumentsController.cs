@@ -30,22 +30,30 @@ namespace api.Controllers{
         }
 
         [HttpPost]
-        public string Post(int instrumentTypeId, string serialNo, DateTimeOffset calibrationDate, InstrumentType instrumentType) {
-            Database.Instruments.Add(new Instrument(){ instrumentTypeId = instrumentTypeId, serialNo = serialNo, calibrationDate = calibrationDate, instrumentType = instrumentType }); 
+        public ActionResult<Instrument> Post(Instrument instrument) {
+            if(!ModelState.IsValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            
+            Database.Instruments.Add(instrument); 
             Database.SaveChanges(); 
             
-            return "Value Added Successfully"; 
+            return instrument;
         }
 
         [HttpPut("{id}")]
-        public string Put(int id, int instrumentTypeId, string serialNo, DateTimeOffset calibrationDate, InstrumentType instrumentType) {
-            Delete(id); 
-            Post(instrumentTypeId, serialNo, calibrationDate, instrumentType); 
+        public string Put(Instrument instrument) {
+            if(!ModelState.IsValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            Delete(instrument.id); 
+            Post(instrument); 
             return "Value updated Successfully";
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id) {
+        public void Delete(long id) {
             var instrumentQuery = Database.Instruments.Where(a => a.id == id);
 
             if(instrumentQuery.Count() == 0) {

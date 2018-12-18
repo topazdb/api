@@ -12,7 +12,7 @@ using static api.Program;
 namespace api.Controllers{
     [Route("scans")]
     [ApiController]
-    public class ScanController : ControllerBase{
+    public class ScanController : ControllerBase {
         [HttpGet]
         public ActionResult<IEnumerable<Scan>> Get() {
             return Database.Scans.ToList();
@@ -30,25 +30,25 @@ namespace api.Controllers{
         }
 
         [HttpPost]
-        public String Post(Scan scan) {
+        public ActionResult<Scan> Post(Scan scan) {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             Database.Scans.Add(scan); 
             Database.SaveChanges(); 
-            return "Value Added Successfully"; 
+            return scan;
         }
 
         [HttpPut("{id}")]
-        public string Put(Scan scan) {
+        public ActionResult<Scan> Put(Scan scan) {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             Delete(scan.id); 
             Post(scan); 
-            return "Value updated Successfully"; 
+            return scan;
         }
 
         [HttpDelete("{id}")]
