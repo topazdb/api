@@ -30,22 +30,22 @@ namespace api.Controllers{
         }
 
         [HttpPost]
-        public String Post(int scanId, string path) {
-            Database.Lands.Add(new Land(){ scanId = scanId, path = path }); 
+        public String Post(Land land) {
+            Database.Lands.Add(land); 
             Database.SaveChanges(); 
             
             return "Value Added Successfully"; 
         }
 
         [HttpPut("{id}")]
-        public string Put(int id, int scanId, string path) {
-            Delete(id); 
-            Post(scanId, path); 
+        public string Put(Land land) {
+            Delete(land.id); 
+            Post(land); 
             return "Value updated Successfully"; 
         }
 
         [HttpDelete("{id}")]
-        public String Delete(int id) {
+        public String Delete(long id) {
             var landQuery = Database.Lands.Where(a => a.id == id);
 
             if(landQuery.Count() == 0) {
