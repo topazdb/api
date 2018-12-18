@@ -52,7 +52,7 @@ namespace api.Controllers {
         }
 
         [HttpDelete("{id}")]
-        public String Delete(int id) {
+        public String Delete(long id) {
             var authorQuery = Database.Authors.Where(a => a.id == id);
 
             if(authorQuery.Count() == 0) {
