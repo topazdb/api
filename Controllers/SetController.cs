@@ -32,10 +32,11 @@ namespace api.Controllers{
             }
         }
 
-        [HttpGet("{name:alpha}")]
+        [HttpGet("{name}")]
         public ActionResult<Set> Get(string name) {
             using(var db = new TopazdbContext()) {
-                var setQuery = db.Sets.Where(a => a.name == name);
+                name = name.ToLower().Replace("-", " ");
+                var setQuery = db.Sets.Where(a => a.name.ToLower() == name);
 
                 if(setQuery.Count() == 0) {
                     throw new HttpResponseException(HttpStatusCode.NotFound);
