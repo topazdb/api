@@ -30,31 +30,29 @@ namespace api.Controllers{
         }
 
         [HttpPost]
-        public String Post(int authorId, int setId, int instrumentId, int barrelNo, int bulletNo, int magnification, int threshold, int resolution) {
-            Database.Scans.Add(new Scan() { 
-                authorId = authorId, 
-                setId = setId, 
-                instrumentId = instrumentId, 
-                barrelNo = barrelNo, 
-                bulletNo = bulletNo, 
-                magnification = magnification, 
-                threshold = threshold, 
-                resolution = resolution 
-            }); 
-                
+        public String Post(Scan scan) {
+            if(!ModelState.IsValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            Database.Scans.Add(scan); 
             Database.SaveChanges(); 
             return "Value Added Successfully"; 
         }
 
         [HttpPut("{id}")]
-        public string Put(int id, int authorId, int setId, int instrumentId, int barrelNo, int bulletNo, int magnification, int threshold, int resolution) {
-            Delete(id); 
-            Post(authorId, setId, instrumentId, barrelNo, bulletNo, magnification, threshold, resolution); 
+        public string Put(Scan scan) {
+            if(!ModelState.IsValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            Delete(scan.id); 
+            Post(scan); 
             return "Value updated Successfully"; 
         }
 
         [HttpDelete("{id}")]
-        public String Delete(int id) {
+        public String Delete(long id) {
             var scanQuery = Database.Scans.Where(a => a.id == id);
 
             if(scanQuery.Count() == 0) {
