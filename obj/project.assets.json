@@ -4425,7 +4425,6 @@
       "type": "package",
       "path": "google.protobuf/3.5.1",
       "files": [
-        ".nupkg.metadata",
         ".signature.p7s",
         "google.protobuf.3.5.1.nupkg.sha512",
         "google.protobuf.nuspec",
@@ -6037,7 +6036,6 @@
       "type": "package",
       "path": "microsoft.extensions.dependencyinjection/2.1.1",
       "files": [
-        ".nupkg.metadata",
         ".signature.p7s",
         "lib/net461/Microsoft.Extensions.DependencyInjection.dll",
         "lib/net461/Microsoft.Extensions.DependencyInjection.xml",
@@ -6883,7 +6881,6 @@
       "type": "package",
       "path": "mysql.data/8.0.13",
       "files": [
-        ".nupkg.metadata",
         ".signature.p7s",
         "lib/net452/MySql.Data.dll",
         "lib/net452/MySql.Data.xml",
@@ -6902,7 +6899,6 @@
       "type": "package",
       "path": "mysql.data.entityframeworkcore/8.0.13",
       "files": [
-        ".nupkg.metadata",
         ".signature.p7s",
         "lib/net452/MySql.Data.EntityFrameworkCore.dll",
         "lib/net452/MySql.Data.EntityFrameworkCore.xml",
@@ -7752,7 +7748,6 @@
       "type": "package",
       "path": "system.configuration.configurationmanager/4.4.1",
       "files": [
-        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",

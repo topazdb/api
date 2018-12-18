@@ -5,7 +5,6 @@ namespace api.db {
     public partial class Set {
         public Set() {
             scans = new HashSet<Scan>();
-            creationDate = DateTime.Now;
         }
 
         public long id { get; set; }

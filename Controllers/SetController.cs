@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web.Http;
+using System.Net.Http;
 using api.db;
 
 namespace api.Controllers{
@@ -18,7 +19,7 @@ namespace api.Controllers{
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public ActionResult<Set> Get(int id) {
             using(var db = new TopazdbContext()) {
                 var setQuery = db.Sets.Where(a => a.id == id);
@@ -31,19 +32,35 @@ namespace api.Controllers{
             }
         }
 
-        [HttpPost]
-        public String Post(string name) {
-            using(var db = new TopazdbContext()){
-                db.Sets.Add(new Set() { name = name }); 
-                db.SaveChanges(); 
+        [HttpGet("{name:alpha}")]
+        public ActionResult<Set> Get(string name) {
+            using(var db = new TopazdbContext()) {
+                var setQuery = db.Sets.Where(a => a.name == name);
+
+                if(setQuery.Count() == 0) {
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                }
+
+                return setQuery.First();
             }
-            return "Value Added Successfully"; 
+        }
+
+        [HttpPost]
+        public ActionResult<Set> Post(Set set) {
+            using(var db = new TopazdbContext()) {
+                if(!ModelState.IsValid) throw new HttpResponseException(HttpStatusCode.BadRequest);
+                
+                db.Sets.Add(set); 
+                db.SaveChanges(); 
+                return set;
+            }
+            
         }
 
         [HttpPut("{id}")]
         public string Put(int id, string name) {
             Delete(id); 
-            Post(name); 
+            Post(new Set() { name = name }); 
             return "Value updated Successfully"; 
         }
 
