@@ -34,21 +34,21 @@ namespace api.Controllers {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            
+
             Database.Authors.Add(author); 
             Database.SaveChanges(); 
             return author;
         }
 
         [HttpPut("{id}")]
-        public string Put(int id, string name, string contact) {
-            if(name == null){
-                throw new Exception("Name cannot be a null value");
+        public ActionResult<Author> Put(Author author) {
+            if(!ModelState.IsValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             
-            Delete(id); 
-            Post(name, contact); 
-            return "Value updated Successfully"; 
+            Delete(author.id); 
+            Post(author); 
+            return author;
         }
 
         [HttpDelete("{id}")]
