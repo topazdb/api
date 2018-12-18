@@ -7,9 +7,12 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using api.db;
 
 namespace api {
     public class Program {
+        public static readonly Context Database = new Context();
+
         public static void Main(string[] args) {
             CreateWebHostBuilder(args).Build().Run();
         }

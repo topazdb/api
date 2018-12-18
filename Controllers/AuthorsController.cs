@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web.Http;
 using api.db;
+using static api.Program;
 
 namespace api.Controllers {
     [Route("authors")]
@@ -13,22 +14,18 @@ namespace api.Controllers {
     public class AuthorsController : ControllerBase {
         [HttpGet]
         public ActionResult<IEnumerable<Author>> Get() {
-            using(var db = new TopazdbContext()) {
-                return db.Authors.ToList();
-            }
+            return Database.Authors.ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Author> Get(int id) {
-            using(var db = new TopazdbContext()) {
-                var authorQuery = db.Authors.Where(a => a.id == id);
-                
-                if(authorQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-                
-                return authorQuery.First();
+            var authorQuery = Database.Authors.Where(a => a.id == id);
+            
+            if(authorQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+            
+            return authorQuery.First();
         }
 
         [HttpPost]
@@ -36,10 +33,9 @@ namespace api.Controllers {
             if(name == null){
                 throw new Exception("Name cannot be a null value");
             }
-            using(var db = new TopazdbContext()){
-                db.Authors.Add(new Author(){ name = name, contact = contact }); 
-                db.SaveChanges(); 
-            }
+
+            Database.Authors.Add(new Author(){ name = name, contact = contact }); 
+            Database.SaveChanges(); 
             return "Value Added Successfully"; 
         }
 
@@ -48,6 +44,7 @@ namespace api.Controllers {
             if(name == null){
                 throw new Exception("Name cannot be a null value");
             }
+            
             Delete(id); 
             Post(name, contact); 
             return "Value updated Successfully"; 
@@ -55,17 +52,15 @@ namespace api.Controllers {
 
         [HttpDelete("{id}")]
         public String Delete(int id) {
-            using(var db = new TopazdbContext()) {
-                var authorQuery = db.Authors.Where(a => a.id == id);
+            var authorQuery = Database.Authors.Where(a => a.id == id);
 
-                if(authorQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-
-                db.Authors.Remove(new Author() { id = id });
-                db.SaveChanges();
-                return "Deleted Successfully"; 
+            if(authorQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+
+            Database.Authors.Remove(new Author() { id = id });
+            Database.SaveChanges();
+            return "Deleted Successfully"; 
         }
     }
 }

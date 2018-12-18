@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web.Http;
 using api.db;
+using static api.Program;
 
 namespace api.Controllers{
     [Route("instrumenttype")]
@@ -13,30 +14,24 @@ namespace api.Controllers{
     public class InstrumentsTypeController : ControllerBase{
         [HttpGet]
         public ActionResult<IEnumerable<InstrumentType>> Get() {
-            using(var db = new TopazdbContext()) {
-                return db.InstrumentTypes.ToList();
-            }
+            return Database.InstrumentTypes.ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<InstrumentType> Get(int id) {
-            using(var db = new TopazdbContext()) {
-                var instrumentTypeQuery = db.InstrumentTypes.Where(a => a.id == id);
-                
-                if(instrumentTypeQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-                
-                return instrumentTypeQuery.First();
+            var instrumentTypeQuery = Database.InstrumentTypes.Where(a => a.id == id);
+            
+            if(instrumentTypeQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+            
+            return instrumentTypeQuery.First();
         }
 
         [HttpPost]
         public String Post(string model, string version, string manufacturer) {
-            using(var db = new TopazdbContext()){
-                db.InstrumentTypes.Add(new InstrumentType(){ model = model, version = version, manufacturer = manufacturer }); 
-                db.SaveChanges(); 
-            }
+            Database.InstrumentTypes.Add(new InstrumentType(){ model = model, version = version, manufacturer = manufacturer }); 
+            Database.SaveChanges(); 
             return "Value Added Successfully"; 
         }
 
@@ -49,17 +44,16 @@ namespace api.Controllers{
 
         [HttpDelete("{id}")]
         public String Delete(int id) {
-            using(var db = new TopazdbContext()) {
-                var instrumentTypeQuery = db.InstrumentTypes.Where(a => a.id == id);
 
-                if(instrumentTypeQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
+            var instrumentTypeQuery = Database.InstrumentTypes.Where(a => a.id == id);
 
-                db.InstrumentTypes.Remove(new InstrumentType() { id = id });
-                db.SaveChanges();
-                return "Deleted Successfully"; 
+            if(instrumentTypeQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+
+            Database.InstrumentTypes.Remove(new InstrumentType() { id = id });
+            Database.SaveChanges();
+            return "Deleted Successfully"; 
         }
     }
 }

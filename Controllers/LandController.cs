@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web.Http;
 using api.db;
+using static api.Program;
 
 namespace api.Controllers{
     [Route("lands")]
@@ -13,30 +14,25 @@ namespace api.Controllers{
     public class LandController : ControllerBase{
         [HttpGet]
         public ActionResult<IEnumerable<Land>> Get() {
-            using(var db = new TopazdbContext()) {
-                return db.Lands.ToList();
-            }
+            return Database.Lands.ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Land> Get(int id) {
-            using(var db = new TopazdbContext()) {
-                var landQuery = db.Lands.Where(a => a.id == id);
-                
-                if(landQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-                
-                return landQuery.First();
+            var landQuery = Database.Lands.Where(a => a.id == id);
+            
+            if(landQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+            
+            return landQuery.First();
         }
 
         [HttpPost]
         public String Post(int scanId, string path) {
-            using(var db = new TopazdbContext()){
-                db.Lands.Add(new Land(){ scanId = scanId, path = path }); 
-                db.SaveChanges(); 
-            }
+            Database.Lands.Add(new Land(){ scanId = scanId, path = path }); 
+            Database.SaveChanges(); 
+            
             return "Value Added Successfully"; 
         }
 
@@ -49,17 +45,15 @@ namespace api.Controllers{
 
         [HttpDelete("{id}")]
         public String Delete(int id) {
-            using(var db = new TopazdbContext()) {
-                var landQuery = db.Lands.Where(a => a.id == id);
+            var landQuery = Database.Lands.Where(a => a.id == id);
 
-                if(landQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-
-                db.Lands.Remove(new Land() { id = id });
-                db.SaveChanges();
-                return "Deleted Successfully"; 
+            if(landQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+
+            Database.Lands.Remove(new Land() { id = id });
+            Database.SaveChanges();
+            return "Deleted Successfully"; 
         }
     }
 }

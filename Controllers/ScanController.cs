@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web.Http;
 using api.db;
+using static api.Program;
 
 namespace api.Controllers{
     [Route("scans")]
@@ -13,40 +14,34 @@ namespace api.Controllers{
     public class ScanController : ControllerBase{
         [HttpGet]
         public ActionResult<IEnumerable<Scan>> Get() {
-            using(var db = new TopazdbContext()) {
-                return db.Scans.ToList();
-            }
+            return Database.Scans.ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Scan> Get(int id) {
-            using(var db = new TopazdbContext()) {
-                var scanQuery = db.Scans.Where(a => a.id == id);
-                
-                if(scanQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-                
-                return scanQuery.First();
+            var scanQuery = Database.Scans.Where(a => a.id == id);
+            
+            if(scanQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+            
+            return scanQuery.First();
         }
 
         [HttpPost]
         public String Post(int authorId, int setId, int instrumentId, int barrelNo, int bulletNo, int magnification, int threshold, int resolution) {
-            using(var db = new TopazdbContext()){
-                db.Scans.Add(new Scan() { 
-                    authorId = authorId, 
-                    setId = setId, 
-                    instrumentId = instrumentId, 
-                    barrelNo = barrelNo, 
-                    bulletNo = bulletNo, 
-                    magnification = magnification, 
-                    threshold = threshold, 
-                    resolution = resolution 
-                }); 
+            Database.Scans.Add(new Scan() { 
+                authorId = authorId, 
+                setId = setId, 
+                instrumentId = instrumentId, 
+                barrelNo = barrelNo, 
+                bulletNo = bulletNo, 
+                magnification = magnification, 
+                threshold = threshold, 
+                resolution = resolution 
+            }); 
                 
-                db.SaveChanges(); 
-            }
+            Database.SaveChanges(); 
             return "Value Added Successfully"; 
         }
 
@@ -59,17 +54,15 @@ namespace api.Controllers{
 
         [HttpDelete("{id}")]
         public String Delete(int id) {
-            using(var db = new TopazdbContext()) {
-                var scanQuery = db.Scans.Where(a => a.id == id);
+            var scanQuery = Database.Scans.Where(a => a.id == id);
 
-                if(scanQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-
-                db.Scans.Remove(new Scan() { id = id });
-                db.SaveChanges();
-                return "Deleted Successfully"; 
+            if(scanQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+
+            Database.Scans.Remove(new Scan() { id = id });
+            Database.SaveChanges();
+            return "Deleted Successfully"; 
         }
     }
 }

@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using static api.db.DatabaseCredentialProvider;
 
 namespace api.db {
-    public partial class TopazdbContext : DbContext {
-        public TopazdbContext() {}
+    public partial class Context : DbContext {
+        public Context() {}
 
-        public TopazdbContext(DbContextOptions<TopazdbContext> options) : base(options) {}
+        public Context(DbContextOptions<Context> options) : base(options) {}
 
         public virtual DbSet<Author> Authors { get; set; }
         public virtual DbSet<Instrument> Instruments { get; set; }

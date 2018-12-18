@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web.Http;
 using api.db;
+using static api.Program;
 
 namespace api.Controllers{
     [Route("settings")]
@@ -13,17 +14,13 @@ namespace api.Controllers{
     public class SettingsController : ControllerBase{
         [HttpGet]
         public ActionResult<IEnumerable<Setting>> Get() {
-            using(var db = new TopazdbContext()) {
-                return db.Settings.ToList();
-            }
+            return Database.Settings.ToList();
         }
 
         [HttpPost]
         public String Post(string name, string value) {
-            using(var db = new TopazdbContext()){
-                db.Settings.Add(new Setting(){ name = name, value = value }); 
-                db.SaveChanges(); 
-            }
+            Database.Settings.Add(new Setting(){ name = name, value = value }); 
+            Database.SaveChanges();
             return "Value Added Successfully"; 
         }
 
@@ -36,17 +33,15 @@ namespace api.Controllers{
 
         [HttpDelete("{name}")]
         public String Delete(string name) {
-            using(var db = new TopazdbContext()) {
-                var settingQuery = db.Settings.Where(a => a.name == name);
+            var settingQuery = Database.Settings.Where(a => a.name == name);
 
-                if(settingQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-
-                db.Settings.Remove(new Setting() { name = name });
-                db.SaveChanges();
-                return "Deleted Successfully"; 
+            if(settingQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+
+            Database.Settings.Remove(new Setting() { name = name });
+            Database.SaveChanges();
+            return "Deleted Successfully"; 
         }
     }
 }

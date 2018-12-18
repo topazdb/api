@@ -7,55 +7,50 @@ using System.Net;
 using System.Web.Http;
 using System.Net.Http;
 using api.db;
+using static api.Program;
 
-namespace api.Controllers{
+namespace api.Controllers {
+
     [Route("sets")]
     [ApiController]
     public class SetController : ControllerBase{
         [HttpGet]
         public ActionResult<IEnumerable<Set>> Get() {
-            using(var db = new TopazdbContext()) {
-                return db.Sets.ToList();
-            }
+            return Database.Sets.ToList();
         }
 
         [HttpGet("{id:int}")]
         public ActionResult<Set> Get(int id) {
-            using(var db = new TopazdbContext()) {
-                var setQuery = db.Sets.Where(a => a.id == id);
-                
-                if(setQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-                
-                return setQuery.First();
+            var setQuery = Database.Sets.Where(a => a.id == id);
+            
+            if(setQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+            
+            return setQuery.First();
         }
 
         [HttpGet("{name}")]
         public ActionResult<Set> Get(string name) {
-            using(var db = new TopazdbContext()) {
-                name = name.ToLower().Replace("-", " ");
-                var setQuery = db.Sets.Where(a => a.name.ToLower() == name);
+            name = name.ToLower().Replace("-", " ");
+            var setQuery = Database.Sets.Where(a => a.name.ToLower() == name);
 
-                if(setQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-
-                return setQuery.First();
+            if(setQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+
+            return setQuery.First();
         }
 
         [HttpPost]
         public ActionResult<Set> Post(Set set) {
-            using(var db = new TopazdbContext()) {
-                if(!ModelState.IsValid) throw new HttpResponseException(HttpStatusCode.BadRequest);
-                
-                db.Sets.Add(set); 
-                db.SaveChanges(); 
-                return set;
+            if(!ModelState.IsValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             
+            Database.Sets.Add(set); 
+            Database.SaveChanges(); 
+            return set;            
         }
 
         [HttpPut("{id}")]
@@ -67,17 +62,15 @@ namespace api.Controllers{
 
         [HttpDelete("{id}")]
         public String Delete(int id) {
-            using(var db = new TopazdbContext()) {
-                var setQuery = db.Sets.Where(a => a.id == id);
+            var setQuery = Database.Sets.Where(a => a.id == id);
 
-                if(setQuery.Count() == 0) {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
-
-                db.Sets.Remove(new Set() { id = id });
-                db.SaveChanges();
-                return "Deleted Successfully"; 
+            if(setQuery.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+
+            Database.Sets.Remove(new Set() { id = id });
+            Database.SaveChanges();
+            return "Deleted Successfully"; 
         }
     }
 }
