@@ -30,14 +30,14 @@ namespace api.Controllers {
         }
 
         [HttpPost]
-        public String Post(string name, string contact) {
-            if(name == null){
-                throw new Exception("Name cannot be a null value");
+        public ActionResult<Author> Post(Author author) {
+            if(!ModelState.IsValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-
-            Database.Authors.Add(new Author(){ name = name, contact = contact }); 
+            
+            Database.Authors.Add(author); 
             Database.SaveChanges(); 
-            return "Value Added Successfully"; 
+            return author;
         }
 
         [HttpPut("{id}")]
