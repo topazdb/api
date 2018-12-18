@@ -72,14 +72,14 @@ namespace api.Controllers {
         }
 
         [HttpPut("{id}")]
-        public string Put(int id, string name) {
-            Delete(id); 
-            Post(new Set() { name = name }); 
+        public string Put(Set set) {
+            Delete(set.id); 
+            Post(set);
             return "Value updated Successfully"; 
         }
 
         [HttpDelete("{id}")]
-        public String Delete(int id) {
+        public String Delete(long id) {
             var setQuery = Database.Sets.Where(a => a.id == id);
 
             if(setQuery.Count() == 0) {
