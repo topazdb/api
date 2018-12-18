@@ -43,6 +43,23 @@ namespace api.Controllers {
             return setQuery.First();
         }
 
+        [HttpGet("{name}/scans")]
+        public ActionResult<Scan> GetScans(string name) {
+            name = name.ToLower().Replace("-", " ");
+
+            var query = from scan in Database.Scans 
+                join set in Database.Sets on scan.set equals set
+                where set.name == name select scan;
+
+            System.Console.WriteLine(query.Count());
+            
+            if(query.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            
+            return query.First();
+        }
+
         [HttpPost]
         public ActionResult<Set> Post(Set set) {
             if(!ModelState.IsValid) {
