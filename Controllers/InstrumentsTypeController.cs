@@ -30,21 +30,21 @@ namespace api.Controllers{
         }
 
         [HttpPost]
-        public String Post(string model, string version, string manufacturer) {
-            Database.InstrumentTypes.Add(new InstrumentType(){ model = model, version = version, manufacturer = manufacturer }); 
+        public String Post(InstrumentType type) {
+            Database.InstrumentTypes.Add(type); 
             Database.SaveChanges(); 
             return "Value Added Successfully"; 
         }
 
         [HttpPut("{id}")]
-        public string Put(int id, string model, string version, string manufacturer) {
-            Delete(id); 
-            Post(model, version, manufacturer); 
+        public string Put(InstrumentType type) {
+            Delete(type.id); 
+            Post(type); 
             return "Value updated Successfully"; 
         }
 
         [HttpDelete("{id}")]
-        public String Delete(int id) {
+        public String Delete(long id) {
 
             var instrumentTypeQuery = Database.InstrumentTypes.Where(a => a.id == id);
 
