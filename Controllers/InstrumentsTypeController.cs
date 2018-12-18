@@ -31,6 +31,10 @@ namespace api.Controllers{
 
         [HttpPost]
         public String Post(InstrumentType type) {
+            if(!ModelState.isValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            
             Database.InstrumentTypes.Add(type); 
             Database.SaveChanges(); 
             return "Value Added Successfully"; 
@@ -38,6 +42,10 @@ namespace api.Controllers{
 
         [HttpPut("{id}")]
         public string Put(InstrumentType type) {
+            if(!ModelState.isValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
             Delete(type.id); 
             Post(type); 
             return "Value updated Successfully"; 
