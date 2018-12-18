@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web.Http;
 using api.db;
+using api.Models;
 using static api.Program;
 
 namespace api.Controllers {

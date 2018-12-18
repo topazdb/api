@@ -1,7 +1,7 @@
 using System;
 
 namespace api.db {
-    class DatabaseCredentialProvider {
+    class CredentialProvider {
         static public string hostname {
             get {
                 return Environment.GetEnvironmentVariable("TOPAZ_HOST");

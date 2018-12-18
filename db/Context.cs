@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using static api.db.DatabaseCredentialProvider;
+using api.Models;
 
 namespace api.db {
+    using static CredentialProvider;
+
     public partial class Context : DbContext {
         public Context() {}
 
@@ -16,6 +18,7 @@ namespace api.db {
         public virtual DbSet<Scan> Scans { get; set; }
         public virtual DbSet<Set> Sets { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
+        public virtual DbSet<SetView> SetView { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             if (!optionsBuilder.IsConfigured) {
@@ -222,6 +225,34 @@ namespace api.db {
                     .HasColumnName("name")
                     .HasMaxLength(300)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<SetView>(entity => {
+                entity.ToTable("setView", "topazdb");
+
+                entity.Property(e => e.id)
+                    .HasColumnName("id")
+                    .HasColumnType("bigint(20) unsigned");
+
+                entity.Property(e => e.creationDate)
+                    .HasColumnName("creationDate")
+                    .HasDefaultValueSql("current_timestamp()");
+                
+                entity.Property(e => e.name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.barrelCount)
+                    .HasColumnName("barrelCount");
+
+                entity.Property(e => e.bulletCount)
+                    .HasColumnName("bulletCount");
+                
+                entity.Property(e => e.lastScanDate)
+                    .HasColumnName("lastScanDate")
+                    .HasDefaultValueSql("NULL");
             });
 
             modelBuilder.Entity<Setting>(entity => {

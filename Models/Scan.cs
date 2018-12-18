@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace api.db
-{
+namespace api.Models {
     public partial class Scan {
         public Scan() {
             lands = new HashSet<Land>();

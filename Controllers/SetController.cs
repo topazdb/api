@@ -7,6 +7,7 @@ using System.Net;
 using System.Web.Http;
 using System.Net.Http;
 using api.db;
+using api.Models;
 using static api.Program;
 
 namespace api.Controllers {
@@ -15,13 +16,13 @@ namespace api.Controllers {
     [ApiController]
     public class SetController : ControllerBase{
         [HttpGet]
-        public ActionResult<IEnumerable<Set>> Get() {
-            return Database.Sets.ToList();
+        public ActionResult<IEnumerable<SetView>> Get() {
+            return Database.SetView.ToList();
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult<Set> Get(int id) {
-            var setQuery = Database.Sets.Where(a => a.id == id);
+        public ActionResult<SetView> Get(int id) {
+            var setQuery = Database.SetView.Where(a => a.id == id);
             
             if(setQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
