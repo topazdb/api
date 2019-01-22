@@ -33,9 +33,9 @@ namespace api.Controllers {
         }
 
         [HttpGet("{name}")]
-        public ActionResult<Set> Get(string name) {
+        public ActionResult<SetView> Get(string name) {
             name = decode(name);
-            var setQuery = Database.Sets.Where(a => a.name.ToLower() == name);
+            var setQuery = Database.SetView.Where(a => a.name.ToLower() == name);
 
             if(setQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
