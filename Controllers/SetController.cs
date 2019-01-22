@@ -9,6 +9,7 @@ using System.Net.Http;
 using api.db;
 using api.Models;
 using static api.Program;
+using static api.Util.URL;
 
 namespace api.Controllers {
 
@@ -33,7 +34,7 @@ namespace api.Controllers {
 
         [HttpGet("{name}")]
         public ActionResult<Set> Get(string name) {
-            name = name.ToLower().Replace("-", " ");
+            name = decode(name);
             var setQuery = Database.Sets.Where(a => a.name.ToLower() == name);
 
             if(setQuery.Count() == 0) {
@@ -45,7 +46,7 @@ namespace api.Controllers {
 
         [HttpGet("{name}/scans")]
         public ActionResult<Scan> GetScans(string name) {
-            name = name.ToLower().Replace("-", " ");
+            name = decode(name);
 
             var query = from scan in Database.Scans 
                 join set in Database.Sets on scan.set equals set
