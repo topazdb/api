@@ -27,65 +27,6 @@ namespace api.db {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<Instrument>(entity => {
-
-                entity.ToTable("instruments", "topazdb");
-
-                entity.HasIndex(e => new { e.instrumentTypeId, e.serialNo })
-                    .HasName("instruments_typeId_serialNo_un")
-                    .IsUnique();
-
-                entity.Property(e => e.id)
-                    .HasColumnName("id")
-                    .HasColumnType("bigint(20) unsigned");
-
-                entity.Property(e => e.calibrationDate)
-                    .HasColumnName("calibrationDate")
-                    .HasDefaultValueSql("'0000-00-00 00:00:00'");
-
-                entity.Property(e => e.instrumentTypeId)
-                    .HasColumnName("instrumentTypeId")
-                    .HasColumnType("bigint(20) unsigned");
-
-                entity.Property(e => e.serialNo)
-                    .HasColumnName("serialNo")
-                    .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("NULL");
-
-                entity.HasOne(d => d.instrumentType)
-                    .WithMany(p => p.instruments)
-                    .HasForeignKey(d => d.instrumentTypeId)
-                    .HasConstraintName("instruments_typeId_fk");
-            });
-
-            modelBuilder.Entity<InstrumentType>(entity => {
-
-                entity.ToTable("instrumentTypes", "topazdb");
-
-                entity.Property(e => e.id)
-                    .HasColumnName("id")
-                    .HasColumnType("bigint(20) unsigned");
-
-                entity.Property(e => e.manufacturer)
-                    .IsRequired()
-                    .HasColumnName("manufacturer")
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.model)
-                    .IsRequired()
-                    .HasColumnName("model")
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.version)
-                    .IsRequired()
-                    .HasColumnName("version")
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<Land>(entity => {
 
                 entity.ToTable("lands", "topazdb");

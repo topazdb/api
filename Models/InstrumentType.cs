@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.Models {
+
+    [Table("instrumentTypes")]
+    [DataContract]
     public partial class InstrumentType {
         public InstrumentType() {
-            instruments = new HashSet<Instrument>();
         }
 
+        [DataMember]
         public long id { get; set; }
-        public string model { get; set; }
-        public string version { get; set; }
-        public string manufacturer { get; set; }
 
-        public ICollection<Instrument> instruments { get; set; }
+        [DataMember]
+        public string model { get; set; }
+
+        [DataMember]
+        public string version { get; set; }
+
+        [DataMember]
+        public string manufacturer { get; set; }
     }
 }

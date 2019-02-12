@@ -12,3 +12,17 @@
 /home/talen/Projects/topazdb/api/obj/Debug/netcoreapp2.1/api.RazorTargetAssemblyInfo.cache
 /home/talen/Projects/topazdb/api/obj/Debug/netcoreapp2.1/api.dll
 /home/talen/Projects/topazdb/api/obj/Debug/netcoreapp2.1/api.pdb
+/app/bin/Debug/netcoreapp2.1/api.deps.json
+/app/bin/Debug/netcoreapp2.1/api.runtimeconfig.json
+/app/bin/Debug/netcoreapp2.1/api.runtimeconfig.dev.json
+/app/bin/Debug/netcoreapp2.1/api.dll
+/app/bin/Debug/netcoreapp2.1/api.pdb
+/app/obj/Debug/netcoreapp2.1/api.csprojAssemblyReference.cache
+/app/obj/Debug/netcoreapp2.1/api.csproj.CoreCompileInputs.cache
+/app/obj/Debug/netcoreapp2.1/api.RazorAssemblyInfo.cache
+/app/obj/Debug/netcoreapp2.1/api.RazorAssemblyInfo.cs
+/app/obj/Debug/netcoreapp2.1/api.AssemblyInfoInputs.cache
+/app/obj/Debug/netcoreapp2.1/api.AssemblyInfo.cs
+/app/obj/Debug/netcoreapp2.1/api.RazorTargetAssemblyInfo.cache
+/app/obj/Debug/netcoreapp2.1/api.dll
+/app/obj/Debug/netcoreapp2.1/api.pdb
