@@ -128,6 +128,15 @@ namespace api.db {
                     .HasConstraintName("scans_setId_fk");
             });
 
+            modelBuilder.Entity<Set>(entity => {
+
+                entity.ToTable("sets", "topazdb");
+                
+                entity.Property(e => e.creationDate)
+                    .HasColumnName("creationDate")
+                    .HasDefaultValueSql("current_timestamp()");
+            });
+
             modelBuilder.Entity<SetView>(entity => {
                 entity.ToTable("setView", "topazdb");
 
