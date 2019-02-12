@@ -27,27 +27,6 @@ namespace api.db {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-
-            modelBuilder.Entity<Author>(entity => {
-
-                entity.ToTable("authors", "topazdb");
-
-                entity.Property(e => e.id)
-                    .HasColumnName("id")
-                    .HasColumnType("bigint(20) unsigned");
-
-                entity.Property(e => e.contact)
-                    .HasColumnName("contact")
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("NULL");
-
-                entity.Property(e => e.name)
-                    .IsRequired()
-                    .HasColumnName("name")
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<Instrument>(entity => {
 
                 entity.ToTable("instruments", "topazdb");
