@@ -128,25 +128,6 @@ namespace api.db {
                     .HasConstraintName("scans_setId_fk");
             });
 
-            modelBuilder.Entity<Set>(entity => {
-
-                entity.ToTable("sets", "topazdb");
-
-                entity.Property(e => e.id)
-                    .HasColumnName("id")
-                    .HasColumnType("bigint(20) unsigned");
-
-                entity.Property(e => e.creationDate)
-                    .HasColumnName("creationDate")
-                    .HasDefaultValueSql("current_timestamp()");
-
-                entity.Property(e => e.name)
-                    .IsRequired()
-                    .HasColumnName("name")
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<SetView>(entity => {
                 entity.ToTable("setView", "topazdb");
 
