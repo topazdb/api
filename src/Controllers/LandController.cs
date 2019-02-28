@@ -12,15 +12,21 @@ using static api.Program;
 namespace api.Controllers{
     [Route("lands")]
     [ApiController]
-    public class LandController : ControllerBase{
+    public class LandController : ControllerBase {
+        private Context context;
+
+        public LandController(Context context) {
+            this.context = context;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Land>> Get() {
-            return Database.Lands.ToList();
+            return context.Lands.ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Land> Get(int id) {
-            var landQuery = Database.Lands.Where(a => a.id == id);
+            var landQuery = context.Lands.Where(a => a.id == id);
             
             if(landQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -31,8 +37,8 @@ namespace api.Controllers{
 
         [HttpPost]
         public String Post(Land land) {
-            Database.Lands.Add(land); 
-            Database.SaveChanges(); 
+            context.Lands.Add(land); 
+            context.SaveChanges(); 
             
             return "Value Added Successfully"; 
         }
@@ -46,14 +52,14 @@ namespace api.Controllers{
 
         [HttpDelete("{id}")]
         public String Delete(long id) {
-            var landQuery = Database.Lands.Where(a => a.id == id);
+            var landQuery = context.Lands.Where(a => a.id == id);
 
             if(landQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            Database.Lands.Remove(new Land() { id = id });
-            Database.SaveChanges();
+            context.Lands.Remove(new Land() { id = id });
+            context.SaveChanges();
             return "Deleted Successfully"; 
         }
     }

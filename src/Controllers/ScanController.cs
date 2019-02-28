@@ -13,14 +13,20 @@ namespace api.Controllers{
     [Route("scans")]
     [ApiController]
     public class ScanController : ControllerBase {
+        private Context context;
+        
+        public ScanController(Context context) {
+            this.context = context;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Scan>> Get() {
-            return Database.Scans.ToList();
+            return context.Scans.ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Scan> Get(int id) {
-            var scanQuery = Database.Scans.Where(a => a.id == id);
+            var scanQuery = context.Scans.Where(a => a.id == id);
             
             if(scanQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -35,8 +41,8 @@ namespace api.Controllers{
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            Database.Scans.Add(scan); 
-            Database.SaveChanges(); 
+            context.Scans.Add(scan); 
+            context.SaveChanges(); 
             return scan;
         }
 
@@ -53,14 +59,14 @@ namespace api.Controllers{
 
         [HttpDelete("{id}")]
         public String Delete(long id) {
-            var scanQuery = Database.Scans.Where(a => a.id == id);
+            var scanQuery = context.Scans.Where(a => a.id == id);
 
             if(scanQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            Database.Scans.Remove(new Scan() { id = id });
-            Database.SaveChanges();
+            context.Scans.Remove(new Scan() { id = id });
+            context.SaveChanges();
             return "Deleted Successfully"; 
         }
     }

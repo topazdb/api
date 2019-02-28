@@ -9,19 +9,25 @@ using api.db;
 using api.Models;
 using static api.Program;
 
-namespace api.Controllers{
+namespace api.Controllers {
     [Route("settings")]
     [ApiController]
-    public class SettingsController : ControllerBase{
+    public class SettingsController : ControllerBase {
+        private Context context;
+
+        public SettingsController(Context context) {
+            this.context = context;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Setting>> Get() {
-            return Database.Settings.ToList();
+            return context.Settings.ToList();
         }
 
         [HttpPost]
         public String Post(string name, string value) {
-            Database.Settings.Add(new Setting(){ name = name, value = value }); 
-            Database.SaveChanges();
+            context.Settings.Add(new Setting(){ name = name, value = value }); 
+            context.SaveChanges();
             return "Value Added Successfully"; 
         }
 
@@ -34,14 +40,14 @@ namespace api.Controllers{
 
         [HttpDelete("{name}")]
         public String Delete(string name) {
-            var settingQuery = Database.Settings.Where(a => a.name == name);
+            var settingQuery = context.Settings.Where(a => a.name == name);
 
             if(settingQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            Database.Settings.Remove(new Setting() { name = name });
-            Database.SaveChanges();
+            context.Settings.Remove(new Setting() { name = name });
+            context.SaveChanges();
             return "Deleted Successfully"; 
         }
     }

@@ -11,7 +11,7 @@ namespace api.Models {
         public long authorId { get; set; }
         public long setId { get; set; }
         public long instrumentId { get; set; }
-        public long barrelNo { get; set; }
+        public long? barrelNo { get; set; }
         public long bulletNo { get; set; }
         public DateTime creationDate { get; set; }
         public int? magnification { get; set; }

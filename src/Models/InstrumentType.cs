@@ -18,7 +18,7 @@ namespace api.Models {
         public string model { get; set; }
 
         [DataMember]
-        public string version { get; set; }
+        public int version { get; set; }
 
         [DataMember]
         public string manufacturer { get; set; }

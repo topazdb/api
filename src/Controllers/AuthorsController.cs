@@ -10,17 +10,24 @@ using api.Models;
 using static api.Program;
 
 namespace api.Controllers {
+
     [Route("authors")]
     [ApiController]
     public class AuthorsController : ControllerBase {
+        private Context context;
+        
+        public AuthorsController(Context context) {
+            this.context = context;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Author>> Get() {
-            return Database.Authors.ToList();
+            return context.Authors.ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Author> Get(int id) {
-            var authorQuery = Database.Authors.Where(a => a.id == id);
+            var authorQuery = context.Authors.Where(a => a.id == id);
             
             if(authorQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -35,8 +42,8 @@ namespace api.Controllers {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            Database.Authors.Add(author); 
-            Database.SaveChanges(); 
+            context.Authors.Add(author); 
+            context.SaveChanges(); 
             return author;
         }
 
@@ -53,14 +60,14 @@ namespace api.Controllers {
 
         [HttpDelete("{id}")]
         public String Delete(long id) {
-            var authorQuery = Database.Authors.Where(a => a.id == id);
+            var authorQuery = context.Authors.Where(a => a.id == id);
 
             if(authorQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            Database.Authors.Remove(new Author() { id = id });
-            Database.SaveChanges();
+            context.Authors.Remove(new Author() { id = id });
+            context.SaveChanges();
             return "Deleted Successfully"; 
         }
     }

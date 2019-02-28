@@ -12,15 +12,21 @@ using static api.Program;
 namespace api.Controllers{
     [Route("instrumenttype")]
     [ApiController]
-    public class InstrumentsTypeController : ControllerBase{
+    public class InstrumentsTypeController : ControllerBase {
+        private Context context;
+
+        public InstrumentsTypeController(Context context) {
+            this.context = context;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<InstrumentType>> Get() {
-            return Database.InstrumentTypes.ToList();
+            return context.InstrumentTypes.ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<InstrumentType> Get(int id) {
-            var instrumentTypeQuery = Database.InstrumentTypes.Where(a => a.id == id);
+            var instrumentTypeQuery = context.InstrumentTypes.Where(a => a.id == id);
             
             if(instrumentTypeQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -35,8 +41,8 @@ namespace api.Controllers{
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            Database.InstrumentTypes.Add(type); 
-            Database.SaveChanges(); 
+            context.InstrumentTypes.Add(type); 
+            context.SaveChanges(); 
             return type; 
         }
 
@@ -54,14 +60,14 @@ namespace api.Controllers{
         [HttpDelete("{id}")]
         public String Delete(long id) {
 
-            var instrumentTypeQuery = Database.InstrumentTypes.Where(a => a.id == id);
+            var instrumentTypeQuery = context.InstrumentTypes.Where(a => a.id == id);
 
             if(instrumentTypeQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            Database.InstrumentTypes.Remove(new InstrumentType() { id = id });
-            Database.SaveChanges();
+            context.InstrumentTypes.Remove(new InstrumentType() { id = id });
+            context.SaveChanges();
             return "Deleted Successfully"; 
         }
     }

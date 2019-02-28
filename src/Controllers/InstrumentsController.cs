@@ -13,14 +13,20 @@ namespace api.Controllers{
     [Route("instruments")]
     [ApiController]
     public class InstrumentsController : ControllerBase {
+        private Context context;
+
+        public InstrumentsController(Context context) {
+            this.context = context;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Instrument>> Get() {
-            return Database.Instruments.ToList();
+            return context.Instruments.ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Instrument> Get(int id) {
-            var instrumentQuery = Database.Instruments.Where(a => a.id == id);
+            var instrumentQuery = context.Instruments.Where(a => a.id == id);
             
             if(instrumentQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -35,8 +41,8 @@ namespace api.Controllers{
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             
-            Database.Instruments.Add(instrument); 
-            Database.SaveChanges(); 
+            context.Instruments.Add(instrument); 
+            context.SaveChanges(); 
             
             return instrument;
         }
@@ -54,14 +60,14 @@ namespace api.Controllers{
 
         [HttpDelete("{id}")]
         public void Delete(long id) {
-            var instrumentQuery = Database.Instruments.Where(a => a.id == id);
+            var instrumentQuery = context.Instruments.Where(a => a.id == id);
 
             if(instrumentQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            Database.Instruments.Remove(new Instrument() { id = id });
-            Database.SaveChanges();
+            context.Instruments.Remove(new Instrument() { id = id });
+            context.SaveChanges();
         }
     }
 } 

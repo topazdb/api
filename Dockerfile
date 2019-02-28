@@ -1,11 +1,11 @@
 FROM microsoft/dotnet:sdk AS development
 WORKDIR /app
 
-COPY *.csproj .
+COPY src/*.csproj .
 RUN dotnet restore
 CMD ["dotnet", "watch", "run"]
 
-COPY . .
+COPY src .
 RUN dotnet publish -c Release -o out
 
 FROM microsoft/dotnet:aspnetcore-runtime

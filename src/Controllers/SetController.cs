@@ -15,15 +15,22 @@ namespace api.Controllers {
 
     [Route("sets")]
     [ApiController]
-    public class SetController : ControllerBase{
+    public class SetController : ControllerBase {
+
+        private Context context;
+
+        public SetController(Context context) {
+            this.context = context;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<SetView>> Get() {
-            return Database.SetView.ToList();
+            return context.SetView.ToList();
         }
 
         [HttpGet("{id:int}")]
         public ActionResult<SetView> Get(int id) {
-            var setQuery = Database.SetView.Where(a => a.id == id);
+            var setQuery = context.SetView.Where(a => a.id == id);
             
             if(setQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -35,7 +42,7 @@ namespace api.Controllers {
         [HttpGet("{name}")]
         public ActionResult<SetView> Get(string name) {
             name = decode(name);
-            var setQuery = Database.SetView.Where(a => a.name.ToLower() == name);
+            var setQuery = context.SetView.Where(a => a.name.ToLower() == name);
 
             if(setQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -48,8 +55,8 @@ namespace api.Controllers {
         public ActionResult<Scan> GetScans(string name) {
             name = decode(name);
 
-            var query = from scan in Database.Scans 
-                join set in Database.Sets on scan.set equals set
+            var query = from scan in context.Scans 
+                join set in context.Sets on scan.set equals set
                 where set.name == name select scan;
 
             System.Console.WriteLine(query.Count());
@@ -67,8 +74,8 @@ namespace api.Controllers {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             
-            Database.Sets.Add(set); 
-            Database.SaveChanges(); 
+            context.Sets.Add(set); 
+            context.SaveChanges(); 
             return set;            
         }
 
@@ -80,15 +87,15 @@ namespace api.Controllers {
         }
 
         [HttpDelete("{id}")]
-        public String Delete(long id) {
-            var setQuery = Database.Sets.Where(a => a.id == id);
+        public string Delete(long id) {
+            var setQuery = context.Sets.Where(a => a.id == id);
 
             if(setQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            Database.Sets.Remove(new Set() { id = id });
-            Database.SaveChanges();
+            context.Sets.Remove(new Set() { id = id });
+            context.SaveChanges();
             return "Deleted Successfully"; 
         }
     }

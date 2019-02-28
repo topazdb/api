@@ -21,9 +21,7 @@ namespace api.db {
         public virtual DbSet<SetView> SetView { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            if (!optionsBuilder.IsConfigured) {
-                optionsBuilder.UseMySQL("server="+hostname+";port=3306;user="+user+";password="+password+";database="+database);
-            }
+            optionsBuilder.UseMySQL("server="+hostname+";port=3306;user="+user+";password="+password+";database="+database);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
