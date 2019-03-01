@@ -42,6 +42,7 @@ namespace api.Controllers {
         [HttpGet("{name}")]
         public ActionResult<SetView> Get(string name) {
             name = decode(name);
+            System.Console.WriteLine(name);
             var setQuery = context.SetView.Where(a => a.name.ToLower() == name);
 
             if(setQuery.Count() == 0) {
