@@ -42,7 +42,6 @@ namespace api.Controllers {
         [HttpGet("{name}")]
         public ActionResult<SetView> Get(string name) {
             name = decode(name);
-            System.Console.WriteLine(name);
             var setQuery = context.SetView.Where(a => a.name.ToLower() == name);
 
             if(setQuery.Count() == 0) {
@@ -67,6 +66,22 @@ namespace api.Controllers {
             }
             
             return query.First();
+        }
+
+        [HttpGet("{name}/barrels")]
+        public ActionResult<Dictionary<long?, List<long>>> GetBarrels(string name) {
+            name = decode(name);
+
+            var query = from scan in context.Scans
+                join set in context.Sets on scan.set equals set
+                where set.name == name
+                group scan by scan.barrelNo into barrels
+                select barrels;
+
+            return query.ToDictionary(
+                pair => pair.Key, 
+                pair => pair.Select(scan => scan.bulletNo).ToList()
+            );
         }
 
         [HttpPost]
