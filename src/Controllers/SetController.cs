@@ -77,7 +77,7 @@ namespace api.Controllers {
 
             return query.ToDictionary(
                 scan => (scan.Key == null) ? 0 : scan.Key, 
-                scan => (from barrel in scan orderby barrel.bulletNo select barrel.bulletNo).ToList()
+                scan => (from barrel in scan orderby barrel.bulletNo select barrel.bulletNo).Distinct().ToList()
             );
         }
 
