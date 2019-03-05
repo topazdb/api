@@ -68,19 +68,16 @@ namespace api.Controllers {
             return query.First();
         }
 
-        [HttpGet("{name}/barrels")]
-        public ActionResult<Dictionary<long?, List<long>>> GetBarrels(string name) {
-            name = decode(name);
-
+        [HttpGet("{id}/barrels")]
+        public ActionResult<Dictionary<long?, List<long>>> GetBarrels(long id) {
             var query = from scan in context.Scans
-                join set in context.Sets on scan.set equals set
-                where set.name == name
+                where scan.set.id == id
                 group scan by scan.barrelNo into barrels
                 select barrels;
 
             return query.ToDictionary(
-                pair => pair.Key, 
-                pair => pair.Select(scan => scan.bulletNo).ToList()
+                scan => (scan.Key == null) ? 0 : scan.Key, 
+                scan => (from barrel in scan orderby barrel.bulletNo select barrel.bulletNo).ToList()
             );
         }
 
