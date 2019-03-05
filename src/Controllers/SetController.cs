@@ -58,9 +58,7 @@ namespace api.Controllers {
             var query = from scan in context.Scans 
                 join set in context.Sets on scan.set equals set
                 where set.name == name select scan;
-
-            System.Console.WriteLine(query.Count());
-            
+                
             if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
