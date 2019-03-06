@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -55,10 +56,10 @@ namespace api.Controllers {
         public ActionResult<Scan> GetScans(string name) {
             name = decode(name);
 
-            var query = from scan in context.Scans 
+            var query = from scan in context.Scans
                 join set in context.Sets on scan.set equals set
                 where set.name == name select scan;
-                
+
             if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -66,8 +67,8 @@ namespace api.Controllers {
             return query.First();
         }
 
-        [HttpGet("{id}/barrels")]
-        public ActionResult<Dictionary<long?, List<long>>> GetBarrels(long id) {
+        [HttpGet("{id}/rundown")]
+        public ActionResult<Dictionary<long?, List<long>>> GetRundown(long id) {
             var query = from scan in context.Scans
                 where scan.set.id == id
                 group scan by scan.barrelNo into barrels
@@ -77,6 +78,23 @@ namespace api.Controllers {
                 scan => (scan.Key == null) ? 0 : scan.Key, 
                 scan => (from barrel in scan orderby barrel.bulletNo select barrel.bulletNo).Distinct().ToList()
             );
+        }
+
+        [HttpGet("{id:long}/{barrel:long}/{bullet:long}")]
+        public ActionResult<IEnumerable<Scan>> GetScans(long id, long? barrel, long bullet) {
+            barrel = barrel == 0 ? null : barrel;
+            
+            var collection = context.Scans
+                .Include(s => s.author)
+                .Include(s => s.set)
+                .Include(s => s.instrument)
+                .Include(s => s.lands);
+
+            var query = from scan in collection
+                where scan.set.id == id && scan.barrelNo == barrel && scan.bulletNo == bullet
+                select scan;
+            
+            return query.ToList();
         }
 
         [HttpPost]
