@@ -19,6 +19,7 @@ namespace api.Models {
         public string name { get; set; }
         
         [DataMember]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTimeOffset creationDate { get; set; }
 
         public ICollection<Scan> scans { get; set; }
