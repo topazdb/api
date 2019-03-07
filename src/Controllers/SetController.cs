@@ -33,8 +33,11 @@ namespace api.Controllers {
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Set>> Get() {
-            return sets.ToList();
+        public ActionResult<IEnumerable<Set>> Get([FromUri] int limit = 100, [FromUri] int offset = 0) {
+            return sets
+                .Skip(offset)
+                .Take(limit)
+                .ToList();
         }
 
         [HttpGet("{id:long}")]
