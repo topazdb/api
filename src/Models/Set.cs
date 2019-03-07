@@ -14,6 +14,7 @@ namespace api.Models {
         }
 
         [DataMember]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long id { get; set; }
 
         [DataMember]

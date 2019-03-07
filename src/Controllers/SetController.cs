@@ -50,7 +50,7 @@ namespace api.Controllers {
             return query.First();
         }
 
-        [HttpGet("{id}/rundown")]
+        [HttpGet("{id:long}/rundown")]
         public ActionResult<Dictionary<long?, List<long>>> GetRundown(long id) {
             var query = from scan in context.Scans
                 where scan.set.id == id
