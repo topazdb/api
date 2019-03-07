@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,46 +21,28 @@ namespace api.Controllers {
 
         private Context context;
 
+        public IQueryable<Set> sets {
+            get {
+                return context.Sets
+                    .Include(s => s.scans);
+            }
+        }
+
         public SetController(Context context) {
             this.context = context;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Set>> Get() {
-            return context.Sets.Include(s => s.scans).ToList();
+            return sets.ToList();
         }
 
-        [HttpGet("{id:int}")]
-        public ActionResult<Set> Get(int id) {
-            var setQuery = context.Sets.Where(a => a.id == id);
+        [HttpGet("{id:long}")]
+        public ActionResult<Set> Get(long id) {
+            var query = from set in sets
+                where set.id == id
+                select set;
             
-            if(setQuery.Count() == 0) {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-            
-            return setQuery.First();
-        }
-
-        [HttpGet("{name}")]
-        public ActionResult<Set> Get(string name) {
-            name = decode(name);
-            var setQuery = context.Sets.Where(a => a.name.ToLower() == name);
-
-            if(setQuery.Count() == 0) {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return setQuery.First();
-        }
-
-        [HttpGet("{name}/scans")]
-        public ActionResult<Scan> GetScans(string name) {
-            name = decode(name);
-
-            var query = from scan in context.Scans
-                join set in context.Sets on scan.set equals set
-                where set.name == name select scan;
-
             if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -74,7 +57,7 @@ namespace api.Controllers {
                 group scan by scan.barrelNo into barrels
                 select barrels;
 
-            return query.ToDictionary(
+            return query.ToDictionary( // barrel: [bullets...]
                 scan => (scan.Key == null) ? 0 : scan.Key, 
                 scan => (from barrel in scan orderby barrel.bulletNo select barrel.bulletNo).Distinct().ToList()
             );
@@ -109,24 +92,36 @@ namespace api.Controllers {
             return set;            
         }
 
-        [HttpPut("{id}")]
-        public string Put(Set set) {
-            Delete(set.id); 
-            Post(set);
-            return "Value updated Successfully"; 
-        }
+        [HttpPut("{id:long}")]
+        public ActionResult<Set> Put(long id, Set updated) {
+            var query = from s in sets
+                where s.id == id
+                select s;
 
-        [HttpDelete("{id}")]
-        public string Delete(long id) {
-            var setQuery = context.Sets.Where(a => a.id == id);
-
-            if(setQuery.Count() == 0) {
+            if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            context.Sets.Remove(new Set() { id = id });
+            var set = query.First();
+            set.name = updated.name;
+            context.Sets.Update(set);
+            return set;
+        }
+
+        [HttpDelete("{id:long}")]
+        public ActionResult<Set> Delete(long id) {
+            var query = from s in sets
+                where s.id == id
+                select s;
+
+            if(query.Count() == 0) {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            var set = query.First();
+            context.Sets.Remove(set);
             context.SaveChanges();
-            return "Deleted Successfully"; 
+            return set;
         }
     }
 }
