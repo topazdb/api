@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,30 +21,36 @@ namespace api.Controllers {
             this.context = context;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Scan>> Get() {
-            return context.Scans.ToList();
+        public IQueryable<Scan> scans {
+            get {
+                return context.Scans
+                    .Include(s => s.author)
+                    .Include(s => s.set)
+                    .Include(s => s.instrument)
+                    .Include(s => s.instrument.type)
+                    .Include(s => s.lands);
+            }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        public ActionResult<IEnumerable<Scan>> Get([FromUri] int limit = 100, [FromUri] int offset = 0) {
+            return scans
+                .Skip(offset)
+                .Take(limit)
+                .ToList();
+        }
+
+        [HttpGet("{id:long}")]
         public ActionResult<Scan> Get(long id) {
-            var collection = context.Scans
-                .Include(s => s.author)
-                .Include(s => s.set)
-                .Include(s => s.instrument)
-                .Include(s => s.instrument.type)
-                .Include(s => s.lands);
-
-
-            var scans = from scan in collection
+            var query = from scan in scans
                 where scan.id == id
                 select scan;
 
-            if(scans.Count() == 0) {
+            if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             
-            return scans.First();
+            return query.First();
         }
 
         [HttpPost]
@@ -57,28 +64,45 @@ namespace api.Controllers {
             return scan;
         }
 
-        [HttpPut("{id}")]
-        public ActionResult<Scan> Put(Scan scan) {
+        [HttpPut("{id:long}")]
+        public ActionResult<Scan> Put(long id, Scan updated) {
+            var query = from s in scans
+                where s.id == id
+                select s;
+
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+            
+            var scan = query.First();
+            foreach(PropertyInfo prop in scan.editableProperties) {
+                var oldValue = prop.GetValue(scan);
+                var newValue = prop.GetValue(updated);
 
-            Delete(scan.id); 
-            Post(scan); 
+                if(newValue != null && newValue != oldValue) {
+                    prop.SetValue(scan, newValue);
+                }
+            }
+
+            context.Scans.Update(scan);
+            context.SaveChanges();
             return scan;
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:long}")]
         public String Delete(long id) {
-            var scanQuery = context.Scans.Where(a => a.id == id);
-
-            if(scanQuery.Count() == 0) {
+            var query = from s in context.Scans
+                where s.id == id
+                select s;
+            
+            if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            context.Scans.Remove(new Scan() { id = id });
+            var scan = query.First();
+            context.Scans.Remove(scan);
             context.SaveChanges();
-            return "Deleted Successfully"; 
+            return scan;
         }
     }
 }

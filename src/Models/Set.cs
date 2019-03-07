@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using api.Attributes;
+
 namespace api.Models {
 
     [Table("sets")]
     [DataContract]
-    public partial class Set {
+    public partial class Set : Model {
         public Set() {
             scans = new HashSet<Scan>();
         }
@@ -18,6 +20,7 @@ namespace api.Models {
         public long id { get; set; }
 
         [DataMember]
+        [UserEditable]
         public string name { get; set; }
         
         [DataMember]

@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -106,7 +107,15 @@ namespace api.Controllers {
             }
 
             var set = query.First();
-            set.name = updated.name;
+            foreach(PropertyInfo prop in set.editableProperties) {
+                var oldVal = prop.GetValue(set);
+                var newVal = prop.GetValue(updated);
+
+                if(newVal != null && newVal != oldVal) {
+                    prop.SetValue(set, newVal);
+                }
+            }
+
             context.Sets.Update(set);
             return set;
         }
