@@ -13,7 +13,6 @@ namespace api.Models {
         [DataMember]
         public long scanId { get; set; }
 
-        [DataMember]
         public string path { get; set; }
 
         public Scan scan { get; set; }

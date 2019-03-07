@@ -1,10 +1,13 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web.Http;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using api.db;
 using api.Models;
 using static api.Program;
@@ -24,15 +27,19 @@ namespace api.Controllers{
             return context.Lands.ToList();
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Land> Get(int id) {
-            var landQuery = context.Lands.Where(a => a.id == id);
-            
+        [HttpGet("{id:long}")]
+        public FileStreamResult Get(long id) {
+            var landQuery = from l in context.Lands 
+                where l.id == id 
+                select l;
+
             if(landQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            
-            return landQuery.First();
+
+            Land land = landQuery.First();
+            FileStream stream = new FileStream(land.path, FileMode.Open, FileAccess.Read);
+            return File(stream, "application/octet-stream", Path.GetFileName(land.path));
         }
 
         [HttpPost]

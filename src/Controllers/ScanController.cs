@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Web.Http;
 using api.db;
 using api.Models;
 using static api.Program;
 
-namespace api.Controllers{
+namespace api.Controllers {
     [Route("scans")]
     [ApiController]
     public class ScanController : ControllerBase {
@@ -25,14 +26,23 @@ namespace api.Controllers{
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Scan> Get(int id) {
-            var scanQuery = context.Scans.Where(a => a.id == id);
-            
-            if(scanQuery.Count() == 0) {
+        public ActionResult<Scan> Get(long id) {
+            var collection = context.Scans
+                .Include(s => s.author)
+                .Include(s => s.set)
+                .Include(s => s.instrument)
+                .Include(s => s.lands);
+
+
+            var scans = from scan in collection
+                where scan.id == id
+                select scan;
+
+            if(scans.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             
-            return scanQuery.First();
+            return scans.First();
         }
 
         [HttpPost]
