@@ -32,7 +32,7 @@ namespace api.db {
 
         public Instrument insertInstrument(string model, int version, string manufacturer = "", string serialNo = null) {
             var query = from instrument in context.Instruments
-                where instrument.instrumentType.model == model && instrument.serialNo == null
+                where instrument.type.model == model && instrument.serialNo == null
                 select instrument;
             
             if(query.Count() > 0) {

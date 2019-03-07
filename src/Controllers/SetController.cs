@@ -88,6 +88,7 @@ namespace api.Controllers {
                 .Include(s => s.author)
                 .Include(s => s.set)
                 .Include(s => s.instrument)
+                .Include(s => s.instrument.type)
                 .Include(s => s.lands);
 
             var query = from scan in collection

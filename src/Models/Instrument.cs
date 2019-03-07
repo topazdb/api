@@ -14,7 +14,6 @@ namespace api.Models {
         [DataMember]
         public long id { get; set; }
 
-        [DataMember]
         public long instrumentTypeId { get; set; }
 
         [DataMember]
@@ -25,7 +24,7 @@ namespace api.Models {
 
         [ForeignKey("instrumentTypeId")]
         [DataMember]
-        public InstrumentType instrumentType { get; set; }
+        public InstrumentType type { get; set; }
         
         public ICollection<Scan> scans { get; set; }
     }
