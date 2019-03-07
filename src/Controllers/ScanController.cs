@@ -90,7 +90,7 @@ namespace api.Controllers {
         }
 
         [HttpDelete("{id:long}")]
-        public String Delete(long id) {
+        public ActionResult<Scan> Delete(long id) {
             var query = from s in context.Scans
                 where s.id == id
                 select s;
