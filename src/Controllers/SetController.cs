@@ -25,13 +25,13 @@ namespace api.Controllers {
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<SetView>> Get() {
-            return context.SetView.ToList();
+        public ActionResult<IEnumerable<Set>> Get() {
+            return context.Sets.Include(s => s.scans).ToList();
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult<SetView> Get(int id) {
-            var setQuery = context.SetView.Where(a => a.id == id);
+        public ActionResult<Set> Get(int id) {
+            var setQuery = context.Sets.Where(a => a.id == id);
             
             if(setQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -41,9 +41,9 @@ namespace api.Controllers {
         }
 
         [HttpGet("{name}")]
-        public ActionResult<SetView> Get(string name) {
+        public ActionResult<Set> Get(string name) {
             name = decode(name);
-            var setQuery = context.SetView.Where(a => a.name.ToLower() == name);
+            var setQuery = context.Sets.Where(a => a.name.ToLower() == name);
 
             if(setQuery.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);

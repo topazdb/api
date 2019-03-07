@@ -18,7 +18,6 @@ namespace api.db {
         public virtual DbSet<Scan> Scans { get; set; }
         public virtual DbSet<Set> Sets { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
-        public virtual DbSet<SetView> SetView { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseMySQL("server="+hostname+";port=3306;user="+user+";password="+password+";database="+database);

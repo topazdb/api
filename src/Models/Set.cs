@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,5 +24,21 @@ namespace api.Models {
         public DateTimeOffset creationDate { get; set; }
 
         public ICollection<Scan> scans { get; set; }
+
+        [NotMapped]
+        [DataMember]
+        public int barrelCount {
+            get {
+                return (from scan in scans select scan.barrelNo).Distinct().Count();
+            }
+        }
+
+        [NotMapped]
+        [DataMember]
+        public int bulletCount {
+            get {
+                return (from scan in scans select (scan.barrelNo, scan.bulletNo)).Distinct().Count();
+            }
+        }
     }
 }
