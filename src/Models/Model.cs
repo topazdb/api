@@ -21,7 +21,6 @@ namespace api.Models {
                 string[] parts = invocation.Method.Name.Split("_");
                 
                 if(parts.Length == 2 && parts[0] == "set") {
-                    System.Console.WriteLine(parts[1]);
                     var target = invocation.InvocationTarget;
                     var targetType = invocation.TargetType;
                     var prop = targetType.GetProperty(parts[1]);

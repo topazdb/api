@@ -13,7 +13,6 @@ namespace api {
         
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
             if(reader.TokenType == JsonToken.Null) return null;
-            System.Console.WriteLine("test");
             object value = typeof(Model<>).MakeGenericType(objectType).GetMethod("create").Invoke(null, null);
             serializer.Populate(reader, value);
             return value;
