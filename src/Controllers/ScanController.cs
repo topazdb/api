@@ -70,20 +70,13 @@ namespace api.Controllers {
                 where s.id == id
                 select s;
 
-            if(!ModelState.IsValid) {
+            if(!ModelState.IsValid || query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             
             var scan = query.First();
-            foreach(PropertyInfo prop in scan.editableProperties) {
-                var oldValue = prop.GetValue(scan);
-                var newValue = prop.GetValue(updated);
-
-                if(newValue != null && newValue != oldValue) {
-                    prop.SetValue(scan, newValue);
-                }
-            }
-
+            scan.merge(updated);
+            
             context.Scans.Update(scan);
             context.SaveChanges();
             return scan;

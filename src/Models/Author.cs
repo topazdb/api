@@ -8,23 +8,23 @@ using api.Attributes;
 namespace api.Models {
     [Table("authors")]
     [DataContract]
-    public partial class Author : Model {
+    public partial class Author : Model<Author> {
         public Author() {
             scans = new HashSet<Scan>();
         }
 
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long id { get; set; }
+        public virtual long id { get; set; }
 
         [DataMember]
         [UserEditable]
-        public string name { get; set; }
+        public virtual string name { get; set; }
 
         [DataMember]
         [UserEditable]
-        public string contact { get; set; }
+        public virtual string contact { get; set; }
 
-        public ICollection<Scan> scans { get; set; }
+        public virtual ICollection<Scan> scans { get; set; }
     }
 }

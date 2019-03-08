@@ -8,18 +8,18 @@ using api.Attributes;
 namespace api.Models {
     [Table("lands")]
     [DataContract]
-    public partial class Land : Model {
+    public partial class Land : Model<Land> {
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long id { get; set; }
+        public virtual long id { get; set; }
 
         [DataMember]
         [UserEditable]
-        public long scanId { get; set; }
+        public virtual long scanId { get; set; }
 
         [UserEditable]
-        public string path { get; set; }
+        public virtual string path { get; set; }
 
-        public Scan scan { get; set; }
+        public virtual Scan scan { get; set; }
     }
 }

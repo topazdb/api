@@ -9,65 +9,65 @@ using api.Attributes;
 namespace api.Models {
     [Table("scans")]
     [DataContract]
-    public partial class Scan : Model {
+    public partial class Scan : Model<Scan> {
         public Scan() {
             lands = new HashSet<Land>();
         }
 
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long id { get; set; }
+        public virtual long id { get; set; }
 
         [UserEditable]
-        public long authorId { get; set; }
+        public virtual long authorId { get; set; }
 
         [UserEditable]
-        public long setId { get; set; }
+        public virtual long setId { get; set; }
 
         [UserEditable]
-        public long instrumentId { get; set; }
-
-        [DataMember]
-        [UserEditable]
-        public long? barrelNo { get; set; }
+        public virtual long instrumentId { get; set; }
 
         [DataMember]
         [UserEditable]
-        public long bulletNo { get; set; }
+        public virtual long? barrelNo { get; set; }
+
+        [DataMember]
+        [UserEditable]
+        public virtual long bulletNo { get; set; }
 
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime creationDate { get; set; }
+        public virtual DateTime creationDate { get; set; }
 
         [DataMember]
         [UserEditable]
-        public int? magnification { get; set; }
+        public virtual int? magnification { get; set; }
 
         [DataMember]
         [UserEditable]
-        public int? threshold { get; set; }
+        public virtual int? threshold { get; set; }
 
         [DataMember]
         [UserEditable]
-        public int? resolution { get; set; }
+        public virtual int? resolution { get; set; }
 
         [DataMember]
         [ForeignKey("authorId")]
-        public Author author { get; set; }
+        public virtual Author author { get; set; }
         
         [DataMember]
         [ForeignKey("instrumentId")]
-        public Instrument instrument { get; set; }
+        public virtual Instrument instrument { get; set; }
 
         [DataMember]
         [ForeignKey("setId")]
-        public Set set { get; set; }
+        public virtual Set set { get; set; }
 
-        public ICollection<Land> lands { get; set; }
+        public virtual ICollection<Land> lands { get; set; }
         
         [NotMapped]
         [DataMember]
-        public ICollection<long> landIds {
+        public virtual ICollection<long> landIds {
             get {
                 return (from land in lands select land.id).ToList();
             }

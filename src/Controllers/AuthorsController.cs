@@ -21,19 +21,24 @@ namespace api.Controllers {
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Author>> Get() {
-            return context.Authors.ToList();
+        public ActionResult<IEnumerable<Author>> Get([FromUri] int limit = 100, [FromUri] int offset = 0) {
+            return context.Authors
+                .Skip(offset)
+                .Take(limit)
+                .ToList();
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Author> Get(int id) {
-            var authorQuery = context.Authors.Where(a => a.id == id);
-            
-            if(authorQuery.Count() == 0) {
+        [HttpGet("{id:long}")]
+        public ActionResult<Author> Get(long id) {
+            var query = from a in context.Authors
+                where a.id == id
+                select a;
+
+            if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             
-            return authorQuery.First();
+            return query.First();
         }
 
         [HttpPost]
@@ -47,28 +52,38 @@ namespace api.Controllers {
             return author;
         }
 
-        [HttpPut("{id}")]
-        public ActionResult<Author> Put(Author author) {
-            if(!ModelState.IsValid) {
+        [HttpPut("{id:long}")]
+        public ActionResult<Author> Put(long id, Author updated) {
+            var query = from a in context.Authors
+                where a.id == id
+                select a;
+
+            if(!ModelState.IsValid || query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             
-            Delete(author.id); 
-            Post(author); 
+            var author = query.First();
+            author.merge(updated);
+
+            context.Authors.Update(author);
+            context.SaveChanges();
             return author;
         }
 
-        [HttpDelete("{id}")]
-        public String Delete(long id) {
-            var authorQuery = context.Authors.Where(a => a.id == id);
+        [HttpDelete("{id:long}")]
+        public ActionResult<Author> Delete(long id) {
+            var query = from a in context.Authors
+                where a.id == id
+                select a;
 
-            if(authorQuery.Count() == 0) {
+            if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
-            context.Authors.Remove(new Author() { id = id });
+            
+            var author = query.First();
+            context.Authors.Remove(author);
             context.SaveChanges();
-            return "Deleted Successfully"; 
+            return author;
         }
     }
 }

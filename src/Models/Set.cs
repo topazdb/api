@@ -10,28 +10,28 @@ namespace api.Models {
 
     [Table("sets")]
     [DataContract]
-    public partial class Set : Model {
+    public partial class Set : Model<Set> {
         public Set() {
             scans = new HashSet<Scan>();
         }
 
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long id { get; set; }
+        public virtual long id { get; set; }
 
         [DataMember]
         [UserEditable]
-        public string name { get; set; }
+        public virtual string name { get; set; }
         
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTimeOffset creationDate { get; set; }
+        public virtual DateTimeOffset creationDate { get; set; }
 
-        public ICollection<Scan> scans { get; set; }
+        public virtual ICollection<Scan> scans { get; set; }
 
         [NotMapped]
         [DataMember]
-        public int barrelCount {
+        public virtual int barrelCount {
             get {
                 return (from scan in scans select scan.barrelNo).Distinct().Count();
             }
@@ -39,7 +39,7 @@ namespace api.Models {
 
         [NotMapped]
         [DataMember]
-        public int bulletCount {
+        public virtual int bulletCount {
             get {
                 return (from scan in scans select (scan.barrelNo, scan.bulletNo)).Distinct().Count();
             }

@@ -9,24 +9,24 @@ namespace api.Models {
 
     [Table("instrumentTypes")]
     [DataContract]
-    public partial class InstrumentType : Model {
+    public partial class InstrumentType : Model<InstrumentType> {
         public InstrumentType() {
         }
 
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long id { get; set; }
+        public virtual long id { get; set; }
 
         [DataMember]
         [UserEditable]
-        public string model { get; set; }
+        public virtual string model { get; set; }
 
         [DataMember]
         [UserEditable]
-        public int version { get; set; }
+        public virtual int version { get; set; }
 
         [DataMember]
         [UserEditable]
-        public string manufacturer { get; set; }
+        public virtual string manufacturer { get; set; }
     }
 }

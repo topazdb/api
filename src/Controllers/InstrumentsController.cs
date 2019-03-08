@@ -1,38 +1,53 @@
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Web.Http;
 using api.db;
 using api.Models;
 using static api.Program;
 
-namespace api.Controllers{
+namespace api.Controllers {
+
     [Route("instruments")]
     [ApiController]
     public class InstrumentsController : ControllerBase {
         private Context context;
+
+        private IQueryable<Instrument> instruments {
+            get {
+                return context.Instruments
+                    .Include(i => i.type);
+            }
+        }
 
         public InstrumentsController(Context context) {
             this.context = context;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Instrument>> Get() {
-            return context.Instruments.ToList();
+        public ActionResult<IEnumerable<Instrument>> Get([FromUri] int limit = 100, [FromUri] int offset = 0) {
+            return instruments
+                .Skip(offset)
+                .Take(limit)
+                .ToList();
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Instrument> Get(int id) {
-            var instrumentQuery = context.Instruments.Where(a => a.id == id);
-            
-            if(instrumentQuery.Count() == 0) {
+        [HttpGet("{id:long}")]
+        public ActionResult<Instrument> Get(long id) {
+            var query = from i in instruments
+                where i.id == id
+                select i;
+             
+            if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return instrumentQuery.First(); 
+            return query.First(); 
         }
 
         [HttpPost]
@@ -43,31 +58,42 @@ namespace api.Controllers{
             
             context.Instruments.Add(instrument); 
             context.SaveChanges(); 
-            
             return instrument;
         }
 
-        [HttpPut("{id}")]
-        public string Put(Instrument instrument) {
-            if(!ModelState.IsValid) {
+        [HttpPut("{id:long}")]
+        public ActionResult<Instrument> Put(long id, Instrument updated) {
+            var query = from i in instruments
+                where i.id == id
+                select i;
+
+            if(!ModelState.IsValid || query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            Delete(instrument.id); 
-            Post(instrument); 
-            return "Value updated Successfully";
+            var instrument = query.First();
+            instrument.merge(updated);
+
+            context.Instruments.Update(instrument);
+            context.SaveChanges();
+
+            return instrument;
         }
 
-        [HttpDelete("{id}")]
-        public void Delete(long id) {
-            var instrumentQuery = context.Instruments.Where(a => a.id == id);
-
-            if(instrumentQuery.Count() == 0) {
+        [HttpDelete("{id:long}")]
+        public ActionResult<Instrument> Delete(long id) {
+            var query = from i in instruments
+                where i.id == id
+                select i;
+                
+            if(query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
-            context.Instruments.Remove(new Instrument() { id = id });
+            
+            var instrument = query.First();
+            context.Instruments.Remove(instrument);
             context.SaveChanges();
+            return instrument;
         }
     }
 } 

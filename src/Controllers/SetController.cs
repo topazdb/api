@@ -102,19 +102,12 @@ namespace api.Controllers {
                 where s.id == id
                 select s;
 
-            if(query.Count() == 0) {
+            if(!ModelState.IsValid || query.Count() == 0) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
             var set = query.First();
-            foreach(PropertyInfo prop in set.editableProperties) {
-                var oldVal = prop.GetValue(set);
-                var newVal = prop.GetValue(updated);
-
-                if(newVal != null && newVal != oldVal) {
-                    prop.SetValue(set, newVal);
-                }
-            }
+            set.merge(updated);
 
             context.Sets.Update(set);
             return set;
