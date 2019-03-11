@@ -19,12 +19,15 @@ namespace api.Models {
         public virtual long id { get; set; }
 
         [UserEditable]
+        [DataMember]
         public virtual long authorId { get; set; }
 
         [UserEditable]
+        [DataMember]
         public virtual long setId { get; set; }
 
         [UserEditable]
+        [DataMember]
         public virtual long instrumentId { get; set; }
 
         [DataMember]

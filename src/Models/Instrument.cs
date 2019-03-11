@@ -18,6 +18,7 @@ namespace api.Models {
         public virtual long id { get; set; }
 
         [UserEditable]
+        [DataMember]
         public virtual long instrumentTypeId { get; set; }
 
         [DataMember]
