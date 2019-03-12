@@ -31,6 +31,10 @@ namespace api.db {
         }
 
         public Instrument insertInstrument(string model, int version, string manufacturer = "", string serialNo = null) {
+            if(model == null) {
+                return null;
+            }
+
             var query = from instrument in context.Instruments
                 where instrument.type.model == model && instrument.serialNo == null
                 select instrument;
@@ -99,13 +103,16 @@ namespace api.db {
             Scan newScan = new Scan();
             newScan.authorId = author.id;
             newScan.setId = set.id;
-            newScan.instrumentId = instrument.id;
             newScan.barrelNo = result.barrelNo;
             newScan.bulletNo = result.bulletNo;
             newScan.creationDate = DateTime.Now;
             newScan.magnification = result.magnification;
             newScan.threshold = result.threshold;
             newScan.resolution = result.resolution;
+
+            if(instrument != null) {
+                newScan.instrumentId = instrument.id;
+            }
 
             context.Scans.Add(newScan);
             context.SaveChanges();

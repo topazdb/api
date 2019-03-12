@@ -7,7 +7,7 @@ namespace api.Tests {
     public class PathParserTest {
         [Fact]
         public void TestPathParser_IncorrectElementCount() {
-            const string badPath = "/mnt/csafe/HS224 Clone - Test Set 8 - Land 1 - Sneox1 - 20x - auto light left image +20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p";
+            const string badPath = "/mnt/csafe/HS224 Clone - Test Set 8 - 20x - auto light left image +20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p";
             Parser parser;
             Assert.Throws<PathParserException>(() => parser = new Parser(badPath));
         }
@@ -120,6 +120,25 @@ namespace api.Tests {
             PathParserResult result = parser.result;
 
             Assert.Equal("Connor Hergenreter", result.authorName);            
+        }
+
+        [Fact]
+        public void TestPathParser_NoMagnification() {
+            const string path = "/data/CSAFE Persistence/SW/Barrel 1/Set B/Bullet 452/CSAFE Persistence - SW - Barrel 1 - Bullet 452 - Land 1 - auto light left image +20% - threshold 2 - resolution 4 - Allison Mark.x3p";
+            Parser parser = new Parser(path);
+            PathParserResult result = parser.result;
+            
+            Assert.Equal("CSAFE Persistence - SW", result.setName);
+            Assert.Equal(1, result.barrelNo);
+            Assert.Equal(452, result.bulletNo);
+            Assert.Equal(1, result.landNo);
+            Assert.Equal("auto light left image +20%", result.lightSettings);
+            Assert.Equal(0, result.magnification);
+            Assert.Equal(2, result.threshold);
+            Assert.Equal(4, result.resolution);
+            Assert.Equal(null, result.instrumentName);
+            Assert.Equal(0, result.instrumentVersion);
+            Assert.Equal("Allison Mark", result.authorName);
         }
     }
 }

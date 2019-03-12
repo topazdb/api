@@ -37,8 +37,8 @@ namespace api.Util.PathParser {
             this.resultType = this.result.GetType();
             this.pieces = filename.Split(DELIMITER);
 
-            if(this.pieces.Length < 10) {
-                throw new PathParserException($"Incorrect number of elements in filename.  Got: {this.pieces.Length}, Expected: 10-11");
+            if(this.pieces.Length < 8) {
+                throw new PathParserException($"Incorrect number of elements in filename.  Got: {this.pieces.Length}, Expected: 8-11");
             }
 
             this.parse();
@@ -54,7 +54,7 @@ namespace api.Util.PathParser {
             }
             
             string currentKey = RESULT_PROPERTIES[propertyIndex];
-            string currentValue = pieces[pieceIndex];
+            string currentValue = pieces[pieceIndex].Trim();
             (int, int) next = ( pieceIndex + 1, propertyIndex + 1 );
 
             switch(currentKey) {
