@@ -17,7 +17,7 @@ namespace api.Controllers {
     [ApiController]
     public class InstrumentsController : ControllerBase {
         private Context context;
-
+        private Store store;
         private IQueryable<Instrument> instruments {
             get {
                 return context.Instruments
@@ -25,8 +25,9 @@ namespace api.Controllers {
             }
         }
 
-        public InstrumentsController(Context context) {
+        public InstrumentsController(Context context, Store store) {
             this.context = context;
+            this.store = store;
         }
 
         [HttpGet]

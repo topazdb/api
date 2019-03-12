@@ -15,8 +15,6 @@ using api.Models;
 namespace api {
     public class Program {
         public static void Main(string[] args) {
-
-            new Populator(@"/data");
             CreateWebHostBuilder(args).Build().Run();
         }
 

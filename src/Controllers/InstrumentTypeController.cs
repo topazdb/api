@@ -15,9 +15,11 @@ namespace api.Controllers{
     [ApiController]
     public class InstrumentTypeController : ControllerBase {
         private Context context;
+        private Store store;
 
-        public InstrumentTypeController(Context context) {
+        public InstrumentTypeController(Context context, Store store) {
             this.context = context;
+            this.store = store;
         }
 
         [HttpGet]

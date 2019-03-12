@@ -14,9 +14,11 @@ namespace api.Controllers {
     [ApiController]
     public class SettingsController : ControllerBase {
         private Context context;
+        private Store store;
 
-        public SettingsController(Context context) {
+        public SettingsController(Context context, Store store) {
             this.context = context;
+            this.store = store;
         }
 
         [HttpGet]

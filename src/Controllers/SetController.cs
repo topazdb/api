@@ -21,6 +21,7 @@ namespace api.Controllers {
     public class SetController : ControllerBase {
 
         private Context context;
+        private Store store;
 
         public IQueryable<Set> sets {
             get {
@@ -29,8 +30,9 @@ namespace api.Controllers {
             }
         }
 
-        public SetController(Context context) {
+        public SetController(Context context, Store store) {
             this.context = context;
+            this.store = store;
         }
 
         [HttpGet]
