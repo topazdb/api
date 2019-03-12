@@ -112,14 +112,23 @@ namespace api.db {
             return newScan;
         }
 
-        public Land insertLand(string path, PathParserResult result, Set set, Instrument instrument, Author author) {
-            
+        public Land getLand(string path) {
             var query = from land in context.Lands
                 where land.path == path
                 select land;
 
-            if(query.Count() > 0) {
-                return query.First();
+            return query.Count() > 0 ? query.First() : null;
+        }
+
+        public bool landExists(string path) {
+            return getLand(path) != null;
+        }
+
+        public Land insertLand(string path, PathParserResult result, Set set, Instrument instrument, Author author) {
+            Land land = getLand(path);            
+            
+            if(land != null) {
+                return land;
             }
 
             Scan scan = insertScan(path, result, set, instrument, author);

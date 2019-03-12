@@ -53,6 +53,11 @@ namespace api.Util {
             this.status.totalFiles = paths.Length;
             
             foreach(string file in paths) {
+                if(dba.landExists(file)) {
+                    this.status.processedFiles++;
+                    continue;
+                }
+                
                 string fixedPath = PathFixes.fix(file);
 
                 try {
