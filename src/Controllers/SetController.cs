@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq;
@@ -13,7 +14,9 @@ using api.db;
 using api.Models;
 using static api.Program;
 using static api.Util.URL;
+using Newtonsoft.Json.Linq;
 
+using System.ComponentModel;
 namespace api.Controllers {
 
     [Route("sets")]
@@ -85,17 +88,40 @@ namespace api.Controllers {
             return query.ToList();
         }
 
+        [HttpPut("{id:int}")]
+        public ActionResult<IEnumerable<Scan>> addScans(int id) {
+            
+            var collection = context.Scans
+                .Include(s => s.author)
+                .Include(s => s.set)
+                .Include(s => s.instrument)
+                .Include(s => s.instrument.type)
+                .Include(s => s.lands);
+
+            var query = from scan in collection
+                where scan.set.id == id 
+                select scan;
+            
+            return query.ToList();
+        }
+
         [HttpPost]
-        public ActionResult<Set> Post(Set set) {
+        public ActionResult<Set> Post([FromBody] JObject json) {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+            Set s = json["set"].ToObject<Set>();
+            ICollection<Scan> scans = json["scans"].ToObject<HashSet<Scan>>();
+
             
+            Set set = new Set();
+            set.name = s.name;
+            set.scans = scans;
+
             context.Sets.Add(set); 
             context.SaveChanges(); 
             return set;            
         }
-
         [HttpPut("{id:long}")]
         public ActionResult<Set> Put(long id, Set updated) {
             var query = from s in sets
@@ -103,12 +129,13 @@ namespace api.Controllers {
                 select s;
 
             if(!ModelState.IsValid || query.Count() == 0) {
+                Console.WriteLine(ModelState.IsValid);
+                Console.WriteLine("queryCount: " +query.Count());
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
             var set = query.First();
             set.merge(updated);
-
             context.Sets.Update(set);
             return set;
         }
