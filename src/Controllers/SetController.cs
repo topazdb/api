@@ -110,9 +110,9 @@ namespace api.Controllers {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+            
             Set s = json["set"].ToObject<Set>();
             ICollection<Scan> scans = json["scans"].ToObject<HashSet<Scan>>();
-
             
             Set set = new Set();
             set.name = s.name;
@@ -129,8 +129,6 @@ namespace api.Controllers {
                 select s;
 
             if(!ModelState.IsValid || query.Count() == 0) {
-                Console.WriteLine(ModelState.IsValid);
-                Console.WriteLine("queryCount: " +query.Count());
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
