@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using api.db;
 using api.Models;
 using static api.Program;
 
+using System.ComponentModel;
 namespace api.Controllers {
     [Route("scans")]
     [ApiController]
@@ -58,7 +60,6 @@ namespace api.Controllers {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-
             context.Scans.Add(scan); 
             context.SaveChanges(); 
             return scan;

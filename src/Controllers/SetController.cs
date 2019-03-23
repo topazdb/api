@@ -15,8 +15,8 @@ using api.Models;
 using static api.Program;
 using static api.Util.URL;
 using Newtonsoft.Json.Linq;
-
 using System.ComponentModel;
+
 namespace api.Controllers {
 
     [Route("sets")]
@@ -88,23 +88,6 @@ namespace api.Controllers {
             return query.ToList();
         }
 
-        [HttpPut("{id:int}")]
-        public ActionResult<IEnumerable<Scan>> addScans(int id) {
-            
-            var collection = context.Scans
-                .Include(s => s.author)
-                .Include(s => s.set)
-                .Include(s => s.instrument)
-                .Include(s => s.instrument.type)
-                .Include(s => s.lands);
-
-            var query = from scan in collection
-                where scan.set.id == id 
-                select scan;
-            
-            return query.ToList();
-        }
-
         [HttpPost]
         public ActionResult<Set> Post([FromBody] JObject json) {
             if(!ModelState.IsValid) {
@@ -122,6 +105,7 @@ namespace api.Controllers {
             context.SaveChanges(); 
             return set;            
         }
+
         [HttpPut("{id:long}")]
         public ActionResult<Set> Put(long id, Set updated) {
             var query = from s in sets
