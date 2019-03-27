@@ -29,7 +29,7 @@ namespace api.Util {
             );
         }
 
-        public string[] getPaths() {
+        public IEnumerable<string> getPaths() {
             return Directory.GetFiles(directory, EXT_REGEX, SearchOption.AllDirectories);
         }
 
@@ -47,11 +47,9 @@ namespace api.Util {
 
             Context context = new Context();
             DataAccess dba = new DataAccess(context);
-            string[] paths = this.getPaths();
+            IEnumerable<string> paths = this.getPaths();
 
             this.status.codeMinor++;
-            this.status.totalFiles = paths.Length;
-            
             foreach(string file in paths) {
                 if(dba.landExists(file)) {
                     this.status.processedFiles++;

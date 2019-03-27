@@ -54,7 +54,7 @@ namespace api.Util.PathParser {
             }
             
             string currentKey = RESULT_PROPERTIES[propertyIndex];
-            string currentValue = pieces[pieceIndex].Trim();
+            string currentValue = pieces[pieceIndex];
             (int, int) next = ( pieceIndex + 1, propertyIndex + 1 );
 
             switch(currentKey) {
@@ -100,6 +100,7 @@ namespace api.Util.PathParser {
         }
 
         private (int, int) parseBulletBarrelLand(string currentKey, string currentValue, int pieceIndex, int propertyIndex) {
+            currentValue = currentValue.Trim();
             Match valueIsCounting = Regex.Match(currentValue, COUNT_REGEX);
             Match valueIsNumber = Regex.Match(currentValue, NUMBER_REGEX);
             bool noMatches = !valueIsCounting.Success && !valueIsNumber.Success;

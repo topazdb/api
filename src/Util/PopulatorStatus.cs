@@ -60,9 +60,6 @@ namespace api {
         }
 
         [DataMember]
-        public int totalFiles { get; set; }
-
-        [DataMember]
         public int processedFiles { get; set; }
 
         [DataMember]

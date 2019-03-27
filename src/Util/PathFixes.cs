@@ -12,7 +12,8 @@ namespace api.Util {
             (new Regex(@"\/([a-zA-Z]+) ([a-zA-Z]|[0-9]+)\/(.*)\1\2"), "/$1 $2/$3$1 $2"),     // changes FAU123 to FAU 123 (if the latter is detected earlier in the path)
             (new Regex(@"(?:HS 44|HS44)"), "Hamby Set 44"),
             (new Regex(@"HTX - (?:Persistence|Persistance)"), "Houston Persistence"),
-            (new Regex(@"((?:Barrel|Bullet|Land) [a-zA-Z0-9]+);"),  "$1 -")
+            (new Regex(@"((?:Barrel|Bullet|Land) [a-zA-Z0-9]+);"),  "$1 -"),
+            (new Regex(@"- Scan [0-9]+ -"), "-")
         };
 
         /**
