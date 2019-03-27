@@ -12,8 +12,8 @@ using api.db;
 using api.Models;
 using Newtonsoft.Json.Linq;
 using static api.Program;
-
 using System.ComponentModel;
+
 namespace api.Controllers {
     [Route("scans")]
     [ApiController]
@@ -79,7 +79,7 @@ namespace api.Controllers {
             context.SaveChanges(); 
             return scans.ToList();
         }
-        
+
         [HttpPut("{id:long}")]
         public ActionResult<Scan> Put(long id, Scan updated) {
             var query = from s in scans
