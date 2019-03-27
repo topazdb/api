@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +10,10 @@ using System.Net;
 using System.Web.Http;
 using api.db;
 using api.Models;
+using Newtonsoft.Json.Linq;
 using static api.Program;
 
+using System.ComponentModel;
 namespace api.Controllers {
     [Route("scans")]
     [ApiController]
@@ -60,12 +63,25 @@ namespace api.Controllers {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-
             context.Scans.Add(scan); 
             context.SaveChanges(); 
             return scan;
         }
 
+        [HttpPut("addAll")]
+        public ActionResult<IEnumerable<Scan>> Post([FromBody] JObject json) {
+            if(!ModelState.IsValid) {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            ICollection<Scan> scans = json["scans"].ToObject<HashSet<Scan>>();
+            foreach(Scan scan in scans){
+                context.Scans.Add(scan); 
+            }
+            
+            context.SaveChanges(); 
+            return scans.ToList();
+        }
+        
         [HttpPut("{id:long}")]
         public ActionResult<Scan> Put(long id, Scan updated) {
             var query = from s in scans

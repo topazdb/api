@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq;
@@ -13,6 +14,8 @@ using api.db;
 using api.Models;
 using static api.Program;
 using static api.Util.URL;
+using Newtonsoft.Json.Linq;
+using System.ComponentModel;
 
 namespace api.Controllers {
 
@@ -88,11 +91,18 @@ namespace api.Controllers {
         }
 
         [HttpPost]
-        public ActionResult<Set> Post(Set set) {
+        public ActionResult<Set> Post([FromBody] JObject json) {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             
+            Set s = json["set"].ToObject<Set>();
+            ICollection<Scan> scans = json["scans"].ToObject<HashSet<Scan>>();
+            
+            Set set = new Set();
+            set.name = s.name;
+            set.scans = scans;
+
             context.Sets.Add(set); 
             context.SaveChanges(); 
             return set;            
@@ -110,7 +120,6 @@ namespace api.Controllers {
 
             var set = query.First();
             set.merge(updated);
-
             context.Sets.Update(set);
             return set;
         }
