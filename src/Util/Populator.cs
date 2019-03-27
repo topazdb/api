@@ -29,10 +29,6 @@ namespace api.Util {
             );
         }
 
-        public IEnumerable<string> getPaths() {
-            return Directory.GetFiles(directory, EXT_REGEX, SearchOption.AllDirectories);
-        }
-
         private void addFileError(string file, string error) {
             List<string> errors = this.status.errors.GetValueOrDefault(file, new List<string>());
             this.status.errors[file] = errors;
@@ -47,17 +43,18 @@ namespace api.Util {
 
             Context context = new Context();
             DataAccess dba = new DataAccess(context);
-            IEnumerable<string> paths = this.getPaths();
+            IEnumerable<string> paths = new X3PFileEnumerable(directory);
 
             this.status.codeMinor++;
-            foreach(string file in paths) {
+            foreach(var file in paths) {
+
                 if(dba.landExists(file)) {
                     this.status.processedFiles++;
                     continue;
                 }
                 
                 string fixedPath = PathFixes.fix(file);
-
+            
                 try {
                     Parser parser = new Parser(fixedPath);
                     dba.insertFromParserResult(file, parser.result);                    
