@@ -17,12 +17,12 @@ namespace api.Util {
         public IEnumerator<string> GetEnumerator() {
             if(root == null || !root.Exists) yield break;
 
-            IEnumerable<FileInfo> results = new List<FileInfo>();
+            IEnumerable<FileInfo> files = new List<FileInfo>();
             try {
-                results = results.Concat(root.EnumerateFiles(X3P_REGEX, SearchOption.TopDirectoryOnly).ToList());
+                files = files.Concat(root.EnumerateFiles(X3P_REGEX, SearchOption.TopDirectoryOnly).ToList());
             } catch(Exception) {}
 
-            foreach(FileInfo file in results) {
+            foreach(FileInfo file in files) {
                 yield return file.ToString();
             }
 
