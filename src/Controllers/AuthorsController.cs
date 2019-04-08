@@ -15,9 +15,11 @@ namespace api.Controllers {
     [ApiController]
     public class AuthorsController : ControllerBase {
         private Context context;
+        private Store store;
         
-        public AuthorsController(Context context) {
+        public AuthorsController(Context context, Store store) {
             this.context = context;
+            this.store = store;
         }
 
         [HttpGet]

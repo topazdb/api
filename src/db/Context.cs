@@ -20,7 +20,7 @@ namespace api.db {
         public virtual DbSet<Setting> Settings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseMySQL("server="+hostname+";port=3306;user="+user+";password="+password+";database="+database);
+            optionsBuilder.UseMySQL("server="+hostname+";port=3306;user="+user+";password="+password+";database="+database+";Convert Zero Datetime=True");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {}

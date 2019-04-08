@@ -37,8 +37,8 @@ namespace api.Util.PathParser {
             this.resultType = this.result.GetType();
             this.pieces = filename.Split(DELIMITER);
 
-            if(this.pieces.Length < 10) {
-                throw new PathParserException($"Incorrect number of elements in filename.  Got: {this.pieces.Length}, Expected: 10-11");
+            if(this.pieces.Length < 8) {
+                throw new PathParserException($"Incorrect number of elements in filename.  Got: {this.pieces.Length}, Expected: 8-11");
             }
 
             this.parse();
@@ -100,6 +100,7 @@ namespace api.Util.PathParser {
         }
 
         private (int, int) parseBulletBarrelLand(string currentKey, string currentValue, int pieceIndex, int propertyIndex) {
+            currentValue = currentValue.Trim();
             Match valueIsCounting = Regex.Match(currentValue, COUNT_REGEX);
             Match valueIsNumber = Regex.Match(currentValue, NUMBER_REGEX);
             bool noMatches = !valueIsCounting.Success && !valueIsNumber.Success;

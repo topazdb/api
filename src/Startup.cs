@@ -15,11 +15,15 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using api.db;
 using api.Models;
+using api.Util;
 
 namespace api {
     public class Startup {
+        private Store store = new Store();
+
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
+            store.populator = new Populator(@"/data");
         }
 
         public IConfiguration Configuration { get; }
@@ -33,6 +37,7 @@ namespace api {
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSingleton<Store>(store);
             services.AddDbContext<Context>();
         }
 

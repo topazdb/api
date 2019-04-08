@@ -19,9 +19,11 @@ namespace api.Controllers {
     [ApiController]
     public class ScanController : ControllerBase {
         private Context context;
+        private Store store;
         
-        public ScanController(Context context) {
+        public ScanController(Context context, Store store) {
             this.context = context;
+            this.store = store;
         }
 
         public IQueryable<Scan> scans {

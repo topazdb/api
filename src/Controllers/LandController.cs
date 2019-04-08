@@ -17,9 +17,11 @@ namespace api.Controllers{
     [ApiController]
     public class LandController : ControllerBase {
         private Context context;
+        private Store store;
 
-        public LandController(Context context) {
+        public LandController(Context context, Store store) {
             this.context = context;
+            this.store = store;
         }
 
         [HttpGet("{id:long}")]
