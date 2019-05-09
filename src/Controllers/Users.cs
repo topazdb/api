@@ -23,7 +23,6 @@ namespace api.Controllers {
         public async Task<IActionResult> Login(LoginRequestPayload payload) {
 
             try {
-                System.Console.WriteLine(payload.ToString());
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, oktaTokenUrl);
                 request.Content = new StringContent(payload.ToString(), Encoding.UTF8, "application/x-www-form-urlencoded");
                 request.Headers.Add("Accept", "application/json");

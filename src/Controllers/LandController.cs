@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using System.Web.Http;
 using System.Net.Http;
@@ -41,6 +42,7 @@ namespace api.Controllers{
 
 
         [HttpDelete("{id:long}")]
+        [Authorize]
         public ActionResult<Land> Delete(long id) {
             var landQuery = from l in context.Lands
                 where l.id == id

@@ -14,7 +14,7 @@ namespace api.Models.Login {
         public readonly string client_secret = Environment.GetEnvironmentVariable("TOPAZ_OKTA_CLIENTSECRET");
         public readonly string grant_type = "authorization_code";
         
-        public string ToString() {
+        public override string ToString() {
             string result = "";
             result += $"code={code}";
             result += $"&state={state}";

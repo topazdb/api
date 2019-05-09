@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using System.Web.Http;
 using api.db;
@@ -44,6 +45,7 @@ namespace api.Controllers{
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult<InstrumentType> Post(InstrumentType type) {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -55,6 +57,7 @@ namespace api.Controllers{
         }
 
         [HttpPut("{id:long}")]
+        [Authorize]
         public ActionResult<InstrumentType> Put(long id, InstrumentType updated) {
             var query = from t in context.InstrumentTypes
                 where t.id == id
@@ -74,6 +77,7 @@ namespace api.Controllers{
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize]
         public ActionResult<InstrumentType> Delete(long id) {
             var query = from t in context.InstrumentTypes
                 where t.id == id

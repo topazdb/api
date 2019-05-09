@@ -1,15 +1,18 @@
 using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Web.Http;
 using System.Net.Http;
+using System.Reflection;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
 using api.db;
 using api.Models;
 using static api.Program;
@@ -91,6 +94,7 @@ namespace api.Controllers {
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult<Set> Post([FromBody] JObject json) {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -109,6 +113,7 @@ namespace api.Controllers {
         }
 
         [HttpPut("{id:long}")]
+        [Authorize]
         public ActionResult<Set> Put(long id, Set updated) {
             var query = from s in sets
                 where s.id == id
@@ -125,6 +130,7 @@ namespace api.Controllers {
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize]
         public ActionResult<Set> Delete(long id) {
             var query = from s in sets
                 where s.id == id

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using System.Web.Http;
 using api.db;
@@ -44,6 +45,7 @@ namespace api.Controllers {
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult<Author> Post(Author author) {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -55,6 +57,7 @@ namespace api.Controllers {
         }
 
         [HttpPut("{id:long}")]
+        [Authorize]
         public ActionResult<Author> Put(long id, Author updated) {
             var query = from a in context.Authors
                 where a.id == id
@@ -73,6 +76,7 @@ namespace api.Controllers {
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize]
         public ActionResult<Author> Delete(long id) {
             var query = from a in context.Authors
                 where a.id == id

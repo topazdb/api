@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Web.Http;
@@ -59,6 +60,7 @@ namespace api.Controllers {
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult<Scan> Post(Scan scan) {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -69,6 +71,7 @@ namespace api.Controllers {
         }
 
         [HttpPut("addAll")]
+        [Authorize]
         public ActionResult<IEnumerable<Scan>> Post([FromBody] JObject json) {
             if(!ModelState.IsValid) {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -83,6 +86,7 @@ namespace api.Controllers {
         }
 
         [HttpPut("{id:long}")]
+        [Authorize]
         public ActionResult<Scan> Put(long id, Scan updated) {
             var query = from s in scans
                 where s.id == id
@@ -101,6 +105,7 @@ namespace api.Controllers {
         }
 
         [HttpDelete("{id:long}")]
+        [Authorize]
         public ActionResult<Scan> Delete(long id) {
             var query = from s in scans
                 where s.id == id
