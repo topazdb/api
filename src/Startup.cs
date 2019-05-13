@@ -26,6 +26,8 @@ namespace api {
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
             store.populator = new Populator(@"/data");
+
+            new System.Threading.Timer((e) => new Populator("@/data"), null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
         }
 
         public IConfiguration Configuration { get; }
