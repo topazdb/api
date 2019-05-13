@@ -37,7 +37,7 @@ namespace api.Controllers{
 
             Land land = landQuery.First();
             FileStream stream = new FileStream(land.path, FileMode.Open, FileAccess.Read);
-            return File(stream, "application/octet-stream", Path.GetFileName(land.path));
+            return File(stream, "application/x-x3p", Path.GetFileName(land.path));
         }
 
 
