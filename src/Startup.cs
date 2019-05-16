@@ -26,6 +26,9 @@ namespace api {
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
             store.populator = new Populator(@"/data");
+            
+            FetchSchemaVersion();
+            ValidateSchemaVersion();
 
             new System.Threading.Timer((e) => new Populator("@/data"), null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
         }
@@ -62,6 +65,27 @@ namespace api {
             
             app.UseAuthentication();
             app.UseMvc();
+        }
+
+        /// <summary>
+        /// Retrieve the schema version from the database and save it
+        /// </summary>
+        private void FetchSchemaVersion() {
+            Context context = new Context();
+            string raw = (from setting in context.Settings where setting.name == "version" select setting.value).First();
+
+            try {
+                store.schemaVersion = Int64.Parse(raw);
+            } catch(Exception e) {
+                store.schemaVersion = 1;
+            }
+        }
+
+        private void ValidateSchemaVersion() {
+            if(store.schemaVersion > Configuration.GetValue<long>("SchemaVersion", 1)) {
+                System.Console.WriteLine("Unhandled database schema version.  Exiting...");
+                System.Environment.Exit(1);
+            }
         }
     }
 }

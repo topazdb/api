@@ -5,6 +5,7 @@ namespace api.Util.PathParser {
         public long? barrelNo { get; set; }
         public long bulletNo { get; set; }
         public long landNo { get; set; }
+        public long scanNo { get; set; }
         public string instrumentName { get; set; } = "";
         public int instrumentVersion { get; set; }
         public int magnification { get; set; }
