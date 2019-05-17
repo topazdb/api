@@ -50,7 +50,7 @@ namespace api.Util {
             foreach(var file in paths) {
                 if(dba.landExists(file)) {
                     this.status.processedFiles++;
-                    return;
+                    continue;
                 }
             
                 try { 
@@ -61,6 +61,7 @@ namespace api.Util {
                     string errorType = (e is PathParserException) ? "Parser Error" : "Database Error";
                     string message = e.InnerException != null ? e.InnerException.Message : e.Message;
                     this.addFileError(file, $"{errorType}: {message}");
+                    continue;
                     
                 } finally {
                     this.status.processedFiles++;

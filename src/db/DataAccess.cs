@@ -150,7 +150,7 @@ namespace api.db {
             for(int i = 0; i < frames.Count; i++) {
                 Frame current = frames[i];
                 Frame next = i < frames.Count - 1 ? frames[i + 1] : null;
-                string name = parentId != null && current.isCounting ? current.countValue.ToString() : current.ToString();
+                string name = parentId != null && current.isCounting && last.childPrefix == current.countKey ? current.countValue.ToString() : current.ToString();
                 string childPrefix = next != null && next.isCounting ? next.countKey : null;
 
                 last = insertSet(name, parentId, childPrefix);

@@ -29,9 +29,7 @@ namespace api {
             store.populator = new Populator(@"/data");
             
             FetchSchemaVersion();
-            ValidateSchemaVersion();
-
-            new System.Threading.Timer((e) => new Populator("@/data"), null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
+            ValidateSchemaVersion();   
         }
 
         public IConfiguration Configuration { get; }
