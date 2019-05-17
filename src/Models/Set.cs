@@ -32,6 +32,11 @@ namespace api.Models {
         [DataMember]
         [UserEditable]
         public virtual string childPrefix { get; set; }
+
+        [DataMember]
+        [UserEditable]
+        [Column("ignorePrefix", TypeName = "bit")]
+        public virtual bool ignorePrefix { get; set; }
         
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

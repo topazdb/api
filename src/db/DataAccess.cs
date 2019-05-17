@@ -70,7 +70,7 @@ namespace api.db {
             return type;
         }
 
-        public Set insertSet(string name, long? parentId = null, string childPrefix = null) {
+        public Set insertSet(string name, long? parentId = null, string childPrefix = null, bool ignorePrefix = false) {
             var query = from set in context.Sets
                 where set.name.ToLower() == name.ToLower() && set.parentId == parentId
                 select set;
@@ -83,6 +83,7 @@ namespace api.db {
             newSet.name = name;
             newSet.parentId = parentId;
             newSet.childPrefix = childPrefix;
+            newSet.ignorePrefix = ignorePrefix;
 
             context.Sets.Add(newSet);
             context.SaveChanges();
@@ -150,10 +151,12 @@ namespace api.db {
             for(int i = 0; i < frames.Count; i++) {
                 Frame current = frames[i];
                 Frame next = i < frames.Count - 1 ? frames[i + 1] : null;
+
                 string name = parentId != null && current.isCounting && last.childPrefix == current.countKey ? current.countValue.ToString() : current.ToString();
                 string childPrefix = next != null && next.isCounting ? next.countKey : null;
+                bool ignorePrefix = last != null && last.childPrefix != null && !current.isCounting;
 
-                last = insertSet(name, parentId, childPrefix);
+                last = insertSet(name, parentId, childPrefix, ignorePrefix);
                 parentId = last.id;
             }
 
