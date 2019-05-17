@@ -72,7 +72,7 @@ namespace api.db {
 
         public Set insertSet(string name, long? parentId = null, string childPrefix = null) {
             var query = from set in context.Sets
-                where set.name == name && set.parentId == parentId
+                where set.name.ToLower() == name.ToLower() && set.parentId == parentId
                 select set;
             
             if(query.Count() > 0) {

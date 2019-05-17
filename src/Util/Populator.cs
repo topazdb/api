@@ -43,32 +43,28 @@ namespace api.Util {
             this.status.codeMinor++;
             
             IEnumerable<string> paths = new X3PFileEnumerable(directory);
+            Context context = new Context();
+            DataAccess dba = new DataAccess(context);
 
             this.status.codeMinor++;
             foreach(var file in paths) {
-                Task.Run(() => {
-                    Context context = new Context();
-                    DataAccess dba = new DataAccess(context);
+                if(dba.landExists(file)) {
+                    this.status.processedFiles++;
+                    return;
+                }
+            
+                try { 
+                    Parser parser = new Parser(file); 
+                    dba.insertFromParserResult(file, parser.result);                    
 
-                    if(dba.landExists(file)) {
-                        this.status.processedFiles++;
-                        return;
-                    }
-                
-                    try { 
-                        Parser parser = new Parser(file); 
-                        dba.insertFromParserResult(file, parser.result);                    
-
-                    } catch(Exception e) {
-                        string errorType = (e is PathParserException) ? "Parser Error" : "Database Error";
-                        string message = e.InnerException != null ? e.InnerException.Message : e.Message;
-                        this.addFileError(file, $"{errorType}: {message}");
-                        
-                    } finally {
-                        this.status.processedFiles++;
-                    }
-                });
-                
+                } catch(Exception e) {
+                    string errorType = (e is PathParserException) ? "Parser Error" : "Database Error";
+                    string message = e.InnerException != null ? e.InnerException.Message : e.Message;
+                    this.addFileError(file, $"{errorType}: {message}");
+                    
+                } finally {
+                    this.status.processedFiles++;
+                }                
             }
         }
     }
