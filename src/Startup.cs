@@ -64,7 +64,11 @@ namespace api {
                 // app.UseHsts();
             }
             
-            
+            app.Use((context, next) => {
+                context.Response.Headers["X-Topaz-Schema-Version"] = Configuration.GetValue<int>("SchemaVersion", 1).ToString();
+                return next.Invoke();
+            });
+
             app.UseAuthentication();
             app.UseMvc();
         }
