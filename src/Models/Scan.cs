@@ -30,13 +30,9 @@ namespace api.Models {
         [DataMember]
         public virtual long instrumentId { get; set; }
 
-        [DataMember]
         [UserEditable]
-        public virtual long? barrelNo { get; set; }
-
         [DataMember]
-        [UserEditable]
-        public virtual long bulletNo { get; set; }
+        public virtual long scanNo { get; set; }
 
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

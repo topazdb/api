@@ -15,6 +15,11 @@ using api.Models;
 namespace api {
     public class Program {
         public static void Main(string[] args) {
+            new System.Threading.Timer((e) => {
+                System.Console.WriteLine("Polling /data for new X3P files.");
+                new Populator("@/data");
+            }, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
+            
             CreateWebHostBuilder(args).Build().Run();
         }
 

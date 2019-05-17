@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.IO;
 using api.Models;
 using api.Util.PathParser;
@@ -69,9 +70,9 @@ namespace api.db {
             return type;
         }
 
-        public Set insertSet(string name) {
+        public Set insertSet(string name, long? parentId = null, string childPrefix = null, bool ignorePrefix = false) {
             var query = from set in context.Sets
-                where set.name == name
+                where set.name.ToLower() == name.ToLower() && set.parentId == parentId
                 select set;
             
             if(query.Count() > 0) {
@@ -80,6 +81,9 @@ namespace api.db {
 
             Set newSet = new Set();
             newSet.name = name;
+            newSet.parentId = parentId;
+            newSet.childPrefix = childPrefix;
+            newSet.ignorePrefix = ignorePrefix;
 
             context.Sets.Add(newSet);
             context.SaveChanges();
@@ -88,8 +92,7 @@ namespace api.db {
 
         public Scan insertScan(string path, PathParserResult result, Set set, Instrument instrument, Author author) {
             var query = from scan in context.Scans
-                join land in context.Lands on scan.id equals land.scanId
-                where Path.GetDirectoryName(land.path) == Path.GetDirectoryName(path)
+                where scan.set.id == set.id && scan.scanNo == result.scanNo
                 select scan;
             
             if(query.Count() > 0) {
@@ -98,10 +101,9 @@ namespace api.db {
 
             Scan newScan = new Scan();
             newScan.authorId = author.id;
+            newScan.scanNo = result.scanNo;
             newScan.instrumentId = instrument != null ? instrument.id : 0;
             newScan.setId = set != null ? set.id : 0;
-            newScan.barrelNo = result.barrelNo;
-            newScan.bulletNo = result.bulletNo;
             newScan.creationDate = DateTime.Now;
             newScan.magnification = result.magnification;
             newScan.threshold = result.threshold;
@@ -142,10 +144,29 @@ namespace api.db {
             return newLand;
         }
 
+        public Set insertSetsFromFrames(List<Frame> frames) {
+            long? parentId = null;
+            Set last = null;
+
+            for(int i = 0; i < frames.Count; i++) {
+                Frame current = frames[i];
+                Frame next = i < frames.Count - 1 ? frames[i + 1] : null;
+
+                string name = parentId != null && current.isCounting && last.childPrefix == current.countKey ? current.countValue.ToString() : current.ToString();
+                string childPrefix = next != null && next.isCounting ? next.countKey : null;
+                bool ignorePrefix = last != null && last.childPrefix != null && !current.isCounting;
+
+                last = insertSet(name, parentId, childPrefix, ignorePrefix);
+                parentId = last.id;
+            }
+
+            return last;
+        }
+
         public void insertFromParserResult(string path, PathParserResult result) {
             Author author = insertAuthor(result.authorName);
             Instrument instrument = insertInstrument(result.instrumentName, result.instrumentVersion);
-            Set set = insertSet(result.setName);
+            Set set = insertSetsFromFrames(result.sets);
             Land land = insertLand(path, result, set, instrument, author);
         }
     }

@@ -1,10 +1,14 @@
+using System;
+using System.Collections.Generic;
+
 namespace api.Util.PathParser {
     public class PathParserResult {
-        public string studyName { get; set; }
+        public List<Frame> sets { get; set; }
         public string setName { get; set; }
         public long? barrelNo { get; set; }
         public long bulletNo { get; set; }
         public long landNo { get; set; }
+        public long scanNo { get; set; }
         public string instrumentName { get; set; } = "";
         public int instrumentVersion { get; set; }
         public int magnification { get; set; }

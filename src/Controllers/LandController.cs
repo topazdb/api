@@ -36,7 +36,7 @@ namespace api.Controllers{
             }
 
             Land land = landQuery.First();
-            FileStream stream = new FileStream(land.path, FileMode.Open, FileAccess.Read);
+            FileStream stream = new FileStream("/data" + land.path, FileMode.Open, FileAccess.Read);
             return File(stream, "application/x-x3p", Path.GetFileName(land.path));
         }
 

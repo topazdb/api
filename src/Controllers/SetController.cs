@@ -32,7 +32,12 @@ namespace api.Controllers {
         public IQueryable<Set> sets {
             get {
                 return context.Sets
-                    .Include(s => s.scans);
+                    .Include(s => s.scans)
+                    .Include("scans.author")
+                    .Include("scans.instrument")
+                    .Include("scans.instrument.type")
+                    .Include("scans.lands")
+                    .Include(s => s.subsets);
             }
         }
 
@@ -43,42 +48,26 @@ namespace api.Controllers {
 
         [HttpGet]
         public ActionResult<IEnumerable<Set>> Get([FromUri] int limit = 100, [FromUri] int offset = 0) {
-            return sets
-                .Skip(offset)
-                .Take(limit)
-                .ToList();
+            return (from set in sets
+                    where set.parentId == null
+                    select set)
+            .Skip(offset)
+            .Take(limit)
+            .ToList();
         }
 
         [HttpGet("{id:long}")]
         public ActionResult<Set> Get(long id) {
-            var query = from set in sets
-                where set.id == id
-                select set;
+            Set result = GetParentsRecursive(id);
             
-            if(query.Count() == 0) {
+            if(result == null) {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            
-            return query.First();
+            return result;
         }
-
-        [HttpGet("{id:long}/rundown")]
-        public ActionResult<Dictionary<long?, List<long>>> GetRundown(long id) {
-            var query = from scan in context.Scans
-                where scan.set.id == id
-                group scan by scan.barrelNo into barrels
-                select barrels;
-
-            return query.ToDictionary( // barrel: [bullets...]
-                scan => (scan.Key == null) ? 0 : scan.Key, 
-                scan => (from barrel in scan orderby barrel.bulletNo select barrel.bulletNo).Distinct().ToList()
-            );
-        }
-
-        [HttpGet("{id:long}/{barrel:long}/{bullet:long}")]
-        public ActionResult<IEnumerable<Scan>> GetScans(long id, long? barrel, long bullet) {
-            barrel = barrel == 0 ? null : barrel;
-            
+        
+        [HttpGet("{id:long}/scans")]
+        public ActionResult<IEnumerable<Scan>> GetScans(long id) {          
             var collection = context.Scans
                 .Include(s => s.author)
                 .Include(s => s.set)
@@ -87,10 +76,25 @@ namespace api.Controllers {
                 .Include(s => s.lands);
 
             var query = from scan in collection
-                where scan.set.id == id && scan.barrelNo == barrel && scan.bulletNo == bullet
+                where scan.set.id == id
                 select scan;
             
             return query.ToList();
+        }
+
+        private Set GetParentsRecursive(long id) {
+            var query = from set in sets
+                where set.id == id
+                select set;
+            
+            if(query.Count() == 0) return null;
+            
+            Set child = query.First();
+            if(child.parentId != null) {
+                child.parent = GetParentsRecursive((long) child.parentId);
+            }
+
+            return child;
         }
 
         [HttpPost]

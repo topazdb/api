@@ -13,6 +13,7 @@ namespace api.Models {
     public partial class Set : Model<Set> {
         public Set() {
             scans = new HashSet<Scan>();
+            subsets = new HashSet<Set>();
         }
 
         [DataMember]
@@ -21,28 +22,35 @@ namespace api.Models {
 
         [DataMember]
         [UserEditable]
+        [ForeignKey("id")]
+        public virtual long? parentId { get; set; }
+
+        [DataMember]
+        [UserEditable]
         public virtual string name { get; set; }
+        
+        [DataMember]
+        [UserEditable]
+        public virtual string childPrefix { get; set; }
+
+        [DataMember]
+        [UserEditable]
+        [Column("ignorePrefix", TypeName = "bit")]
+        public virtual bool ignorePrefix { get; set; }
         
         [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual DateTimeOffset creationDate { get; set; }
 
+        [DataMember]
+        [ForeignKey("parentId")]
+        public virtual ICollection<Set> subsets { get; set; }
+
+        [DataMember]
         public virtual ICollection<Scan> scans { get; set; }
 
-        [NotMapped]
         [DataMember]
-        public virtual int barrelCount {
-            get {
-                return (from scan in scans select scan.barrelNo).Distinct().Count();
-            }
-        }
-
         [NotMapped]
-        [DataMember]
-        public virtual int bulletCount {
-            get {
-                return (from scan in scans select (scan.barrelNo, scan.bulletNo)).Distinct().Count();
-            }
-        }
+        public virtual Set parent { get; set; }
     }
 }
