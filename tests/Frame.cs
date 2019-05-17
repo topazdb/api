@@ -31,6 +31,12 @@ namespace api.Tests {
         }
 
         [Fact]
+        public void IsCounting_InstrumentNameVersionShouldBeTrue() {
+            Frame frame = new Frame("Sneox1");
+            Assert.True(frame.isCounting);
+        }
+
+        [Fact]
         public void IsShorthand_SingleDigitNumbersShouldBeTrue() {
             Frame frame = new Frame("U1");
             Assert.True(frame.isShorthand);
@@ -47,7 +53,8 @@ namespace api.Tests {
             Frame frame = new Frame("UA");
             Assert.True(frame.isShorthand);
         }
-
+        
+        [Fact]
         public void IsShorthand_WordsShouldBeFalse() {
             Frame frame = new Frame("Test");
             Assert.False(frame.isShorthand);
@@ -135,6 +142,36 @@ namespace api.Tests {
         public void CountKey_ShouldBeNullForNonCountingFrames() {
             Frame frame = new Frame("test");
             Assert.Null(frame.countKey);
+        }
+
+        [Fact]
+        public void IsMagnification_TrueBaseCase() {
+            Frame frame = new Frame("20x");
+            Assert.True(frame.isMagnification);
+        }
+
+        [Fact]
+        public void IsMagnification_OnlyNumbersShouldBeFalse() {
+            Frame frame = new Frame("20");
+            Assert.False(frame.isMagnification);
+        }
+
+        [Fact]
+        public void IsMagnification_OnlyLettersShouldBeFalse() {
+            Frame frame = new Frame("test");
+            Assert.False(frame.isMagnification);
+        }
+
+        [Fact]
+        public void Magnification_ShouldBeNullIfNotMagnification() {
+            Frame frame = new Frame("test");
+            Assert.Null(frame.magnification);
+        }
+
+        [Fact]
+        public void Magnification_ShouldBeANumberWhenValid() {
+            Frame frame = new Frame("20x");
+            Assert.Equal(20, frame.magnification);
         }
     }
 }

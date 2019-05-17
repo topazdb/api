@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
 using api.db;
 using api.Models;
 using api.Util;
@@ -47,6 +48,7 @@ namespace api {
                 .AddMvc()
                 .AddJsonOptions(options => {
                     options.SerializerSettings.Converters.Add(new ModelJsonConverter());
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -72,7 +74,7 @@ namespace api {
         /// </summary>
         private void FetchSchemaVersion() {
             Context context = new Context();
-            string raw = (from setting in context.Settings where setting.name == "version" select setting.value).First();
+            string raw = (from setting in context.Settings where setting.name == "version" select setting.value).FirstOrDefault();
 
             try {
                 store.schemaVersion = Int64.Parse(raw);
@@ -82,7 +84,7 @@ namespace api {
         }
 
         private void ValidateSchemaVersion() {
-            if(store.schemaVersion > Configuration.GetValue<long>("SchemaVersion", 1)) {
+            if(store.schemaVersion != Configuration.GetValue<long>("SchemaVersion", 1)) {
                 System.Console.WriteLine("Unhandled database schema version.  Exiting...");
                 System.Environment.Exit(1);
             }

@@ -27,6 +27,7 @@ namespace api.Util {
             this.status = new PopulatorStatus(
                 this.runner = Task.Run(() => this.iterate())
             );
+
         }
 
         private void addFileError(string file, string error) {
@@ -40,33 +41,34 @@ namespace api.Util {
          */
         private void iterate() {
             this.status.codeMinor++;
-
-            Context context = new Context();
-            DataAccess dba = new DataAccess(context);
+            
             IEnumerable<string> paths = new X3PFileEnumerable(directory);
 
             this.status.codeMinor++;
             foreach(var file in paths) {
+                Task.Run(() => {
+                    Context context = new Context();
+                    DataAccess dba = new DataAccess(context);
 
-                if(dba.landExists(file)) {
-                    this.status.processedFiles++;
-                    continue;
-                }
+                    if(dba.landExists(file)) {
+                        this.status.processedFiles++;
+                        return;
+                    }
                 
-                string fixedPath = PathFixes.fix(file);
-            
-                try {
-                    Parser parser = new Parser(fixedPath);
-                    dba.insertFromParserResult(file, parser.result);                    
+                    try { 
+                        Parser parser = new Parser(file); 
+                        dba.insertFromParserResult(file, parser.result);                    
 
-                } catch(Exception e) {
-                    string errorType = (e is PathParserException) ? "Parser Error" : "Database Error";
-                    this.addFileError(fixedPath, $"{errorType}: {e.Message}");
-                    continue;
-                    
-                } finally {
-                    this.status.processedFiles++;
-                }
+                    } catch(Exception e) {
+                        string errorType = (e is PathParserException) ? "Parser Error" : "Database Error";
+                        string message = e.InnerException != null ? e.InnerException.Message : e.Message;
+                        this.addFileError(file, $"{errorType}: {message}");
+                        
+                    } finally {
+                        this.status.processedFiles++;
+                    }
+                });
+                
             }
         }
     }

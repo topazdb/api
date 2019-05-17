@@ -23,7 +23,7 @@ namespace api.Util {
             } catch(Exception) {}
 
             foreach(FileInfo file in files) {
-                yield return file.ToString();
+                yield return file.ToString().Replace("/data", "");
             }
 
             IEnumerable<DirectoryInfo> directories = new List<DirectoryInfo>();
@@ -34,7 +34,7 @@ namespace api.Util {
             foreach(DirectoryInfo directory in directories) {
                 IEnumerable<string> subResults = new X3PFileEnumerable(directory.ToString());
                 foreach(string file in subResults) {
-                    yield return file;
+                    yield return file.Replace("/data", "");
                 }
             }
         }

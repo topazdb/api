@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
+
 namespace api.Util.PathParser {
     public class PathParserResult {
-        public string studyName { get; set; }
+        public List<Frame> sets { get; set; }
         public string setName { get; set; }
         public long? barrelNo { get; set; }
         public long bulletNo { get; set; }
